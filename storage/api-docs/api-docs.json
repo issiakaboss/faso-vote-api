@@ -1,0 +1,131 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Fusion Center Documentation",
+        "description": "Fusion Center Documentation",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000/api",
+            "description": "Local server"
+        },
+        {
+            "url": "http://staging.example.com",
+            "description": "Staging server"
+        },
+        {
+            "url": "http://example.com",
+            "description": "Production server"
+        }
+    ],
+    "paths": {
+        "/api/vote-groups": {
+            "get": {
+                "tags": [
+                    "Groupes de vote"
+                ],
+                "summary": "Lister tous les groupes de vote",
+                "operationId": "007d1ac20c6cd6cd275d60a42b82d62a",
+                "responses": {
+                    "200": {
+                        "description": "Liste des groupes de vote",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "example": "Élections 2025"
+                                            },
+                                            "slug": {
+                                                "type": "string",
+                                                "example": "elections-2025"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Groupes de vote"
+                ],
+                "summary": "Créer un nouveau groupe de vote",
+                "operationId": "b955f92f0ae21027af92f93e25de657c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Élections Présidentielles 2025"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Groupe de vote créé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Élections Présidentielles 2025"
+                                        },
+                                        "slug": {
+                                            "type": "string",
+                                            "example": "elections-presidentielles-2025"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "name": "Authorization",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Groupes de vote",
+            "description": "Groupes de vote"
+        }
+    ]
+}
