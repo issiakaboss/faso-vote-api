@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Candidate;
 use App\Models\Vote;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -12,13 +13,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('candidates', function (Blueprint $table) {
+        Schema::create('votants', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->foreignIdFor(Candidate::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignIdFor(Vote::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->integer('votes')->default(0);
-            $table->string('description')->nullable();
-            $table->string('profession')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->unique(['vote_id', 'email']);
+            $table->unique(['vote_id', 'phone']);
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('candidates');
+        Schema::dropIfExists('votants');
     }
 };

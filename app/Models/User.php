@@ -45,4 +45,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public static function random(): ?self
+    {
+        return static::inRandomOrder()->first();
+    }
 }

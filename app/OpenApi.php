@@ -1,6 +1,9 @@
 <?php
+
 namespace App;
+
 use OpenApi\Annotations as OA;
+
 /**
  * @OA\Info(
  *     version="1.0.0",
@@ -12,12 +15,10 @@ use OpenApi\Annotations as OA;
  *     url="http://127.0.0.1:8000/api",
  *     description="Local server"
  * )
- *
  * @OA\Server(
  *     url="http://staging.example.com",
  *     description="Staging server"
  * )
- *
  * @OA\Server(
  *     url="http://example.com",
  *     description="Production server"
@@ -32,5 +33,4 @@ use OpenApi\Annotations as OA;
  *     in="header"
  * )
  */
-
- class OpenApi {}
+class OpenApi {}
