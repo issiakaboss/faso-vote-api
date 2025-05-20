@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\VoteGroup;
 use Illuminate\Http\Request;
 
-class VoteGroupController extends Controller
+class VoteController extends Controller
 {
     /**
      * @OA\Get(
