@@ -2,24 +2,30 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Vote extends Model
+class Vote extends BaseModel
 {
-    /** @use HasFactory<\Database\Factories\VoteFactory> */
-    use HasFactory;
-
-     protected $fillable = ['candidate_id', 'vote_group_id', 'voter_email', 'voter_phone'];
+    protected $fillable = [
+        'user_id',
+        'title',
+        'slug',
+        'description',
+    ];
 
     public function candidate(): BelongsTo
     {
         return $this->belongsTo(Candidate::class);
     }
 
-    public function voteGroup(): BelongsTo
+    public function candidates(): HasMany
     {
-        return $this->belongsTo(VoteGroup::class);
+        return $this->hasMany(Candidate::class);
+    }
+
+    public function votants(): HasMany
+    {
+        return $this->hasMany(Votant::class);
     }
 }

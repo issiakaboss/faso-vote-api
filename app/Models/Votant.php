@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Models;
+
+class Votant extends BaseModel
+{
+    protected $fillable = [
+        'vote_id',
+        'candidate_id',
+        'email',
+        'phone',
+    ];
+}

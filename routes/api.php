@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\VoteGroupController;
+use App\Http\Controllers\Api\VoteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +19,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('vote-groups', VoteGroupController::class);
+Route::apiResource('vote-groups', VoteController::class);

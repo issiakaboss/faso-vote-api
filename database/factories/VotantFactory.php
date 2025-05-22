@@ -2,13 +2,14 @@
 
 namespace Database\Factories;
 
+use App\Models\Candidate;
 use App\Models\Vote;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Candidate>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Votant>
  */
-class CandidateFactory extends Factory
+class VotantFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,10 +20,9 @@ class CandidateFactory extends Factory
     {
         return [
             'vote_id' => Vote::random() ?: Vote::factory(),
-            'name' => $this->faker->name(),
-            'description' => $this->faker->paragraph(),
-            'profession' => $this->faker->word(),
-            'votes' => $this->faker->numberBetween(0, 100),
+            'candidate_id' => Candidate::random() ?: Candidate::factory(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'phone' => $this->faker->phoneNumber(),
         ];
     }
 }
