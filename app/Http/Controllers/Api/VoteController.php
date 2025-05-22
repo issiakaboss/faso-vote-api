@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Facades\VoteStorage;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\VoteResource;
+use App\Models\Vote;
 use App\Models\VoteGroup;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class VoteController extends Controller
@@ -31,9 +35,9 @@ class VoteController extends Controller
      *     )
      * )
      */
-    public function index()
+    public function getVotes()
     {
-        return response()->json(VoteGroup::all());
+        return VoteResource::collection(Vote::all());
     }
 
     /**
@@ -69,14 +73,28 @@ class VoteController extends Controller
     {
         $request->validate([
             'title' => 'required|string',
+            'description' => 'nullable|string',
+            'start_date' => 'required|date|after_or_equal:today',
+            'end_date' => 'required|date|after:start_date',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $group = VoteGroup::create([
-            'title' => $request->title,
-            'slug' => $request->title,
+        $logoPath = $request->file('logo') ? VoteStorage::put(VOTE_LOGO_PATH, $request->file('logo')) : null;
+
+        $vote = Vote::create([
+            'user_id' => $request->user()->id,
+            'uuid' => (string) \Illuminate\Support\Str::uuid(),
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'start_date' => Carbon::parse($request->input('start_date')),
+            'end_date' => Carbon::parse($request->input('end_date')),
+            'logo' => $logoPath,
         ]);
 
-        return response()->json($group, 201);
+        return response()->json([
+            'message' => 'Vote created successfully',
+            'data' => new VoteResource($vote),
+        ])->setStatusCode(200);
     }
 
     /**

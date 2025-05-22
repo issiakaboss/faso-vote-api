@@ -20,8 +20,11 @@ class VoteFactory extends Factory
         return [
             'user_id' => User::random() ?: User::factory(),
             'title' => $this->faker->sentence(),
-            'slug' => $this->faker->slug(),
             'description' => $this->faker->paragraph(),
+            'start_date' => $this->faker->dateTimeBetween('+1 week', '+2 weeks'),
+            'end_date' => $this->faker->dateTimeBetween('+3 weeks', '+4 weeks'),
+            'is_active' => $this->faker->boolean(),
+            'uuid' => $this->faker->uuid(),
         ];
     }
 }
