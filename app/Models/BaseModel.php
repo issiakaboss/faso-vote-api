@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 
 class BaseModel extends Model
 {
@@ -33,5 +35,10 @@ class BaseModel extends Model
     public static function random(): ?self
     {
         return static::inRandomOrder()->first();
+    }
+
+    public function scopeForUser(Builder $query): Builder
+    {
+        return $query->where('user_id', Auth::user()->id);
     }
 }

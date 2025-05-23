@@ -6,28 +6,24 @@ use App\Facades\VoteStorage;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\VoteResource;
 use App\Models\Vote;
-use App\Models\VoteGroup;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class VoteController extends Controller
 {
-    public const BASE_PATH = parent::BASE_PATH . '/votes';
+    public const BASE_PATH = parent::BASE_PATH.'/votes';
 
     public const VOTE = 'Vote';
 
-    public function getVotes(): JsonResource
+    public function getVotes()
     {
-        return VoteResource::collection(Vote::all());
+        return VoteResource::collection(Vote::forUser()->get());
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(VoteGroup $voteGroup)
+    public function show(Vote $vote): JsonResource
     {
-        //
+        return VoteResource::collection($vote->with('candidates')->get());
     }
 
     public function store(Request $request)
@@ -46,7 +42,7 @@ class VoteController extends Controller
             'logo' => $logoPath,
         ]);
 
-        return self::successJson(new VoteResource($vote), 'Vote created successfully');
+        return self::successJson(new VoteResource($vote->refresh()), 'Vote created successfully');
     }
 
     public function update(Request $request, Vote $vote)
@@ -54,7 +50,14 @@ class VoteController extends Controller
 
         $request->validate(Vote::validationRules());
 
-        $logoPath = $request->file('logo') ? VoteStorage::put(VOTE_LOGO_PATH, $request->file('logo')) : null;
+        return $vote;
+
+        if ($request->file('logo')) {
+            $vote->deleteLogo();
+            $logoPath = VoteStorage::put(VOTE_LOGO_PATH, $request->file('logo'));
+        } else {
+            $logoPath = $vote->logo;
+        }
 
         $vote->update([
             'title' => $request->input('title'),
@@ -63,8 +66,6 @@ class VoteController extends Controller
             'end_date' => Carbon::parse($request->input('end_date')),
             'logo' => $logoPath,
         ]);
-
-        $vote->deleteLogo();
 
         return self::successJson(new VoteResource($vote), 'Vote updated successfully');
     }

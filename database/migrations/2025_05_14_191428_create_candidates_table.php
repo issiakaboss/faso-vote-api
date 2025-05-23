@@ -16,9 +16,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignIdFor(Vote::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->integer('votes')->default(0);
+            $table->integer('votes_count')->default(0);
             $table->string('description')->nullable();
             $table->string('profession')->nullable();
+            $table->string('university')->nullable();
+            $table->string('photo')->nullable();
             $table->timestamps();
         });
     }

@@ -26,8 +26,6 @@ class AuthController extends Controller
             ]);
         }
 
-
-
         /** @var User $user */
         $user = Auth::user();
 
@@ -54,7 +52,6 @@ class AuthController extends Controller
 
         return self::successJson((new UserResource($user)));
     }
-
 
     public function logout(Request $request)
     {

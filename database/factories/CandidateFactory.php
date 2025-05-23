@@ -22,7 +22,7 @@ class CandidateFactory extends Factory
             'name' => $this->faker->name(),
             'description' => $this->faker->paragraph(),
             'profession' => $this->faker->word(),
-            'votes' => $this->faker->numberBetween(0, 100),
+            'votes_count' => $this->faker->numberBetween(0, 100),
         ];
     }
 }

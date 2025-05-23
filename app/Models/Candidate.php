@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Facades\VoteStorage;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Candidate extends BaseModel
@@ -11,11 +12,37 @@ class Candidate extends BaseModel
         'name',
         'description',
         'profession',
-        'votes',
+        'votes_count',
+        'photo',
+        'university',
     ];
 
     public function votes(): HasMany
     {
         return $this->hasMany(Vote::class);
+    }
+
+    public static function validationRules(): array
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'vote_id' => 'required|exists:votes,id',
+            'description' => 'nullable|string',
+            'profession' => 'nullable|string|max:100',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'university' => 'nullable|string|max:255',
+        ];
+    }
+
+    public function photoUrl(): ?string
+    {
+        return VoteStorage::url($this->photo);
+    }
+
+    public function deletePhoto(): void
+    {
+        if ($this->photo) {
+            VoteStorage::delete($this->photo);
+        }
     }
 }

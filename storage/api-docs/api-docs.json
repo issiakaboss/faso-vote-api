@@ -264,12 +264,12 @@
                                     "start_date": {
                                         "type": "string",
                                         "format": "date-time",
-                                        "example": "2023-10-01T00:00:00Z"
+                                        "example": "2025-10-01T00:00:00Z"
                                     },
                                     "end_date": {
                                         "type": "string",
                                         "format": "date-time",
-                                        "example": "2023-10-31T23:59:59Z"
+                                        "example": "2025-10-03T23:59:59Z"
                                     },
                                     "logo": {
                                         "type": "string",
@@ -319,11 +319,63 @@
             }
         },
         "/votes/{vote}": {
-            "post": {
+            "get": {
                 "tags": [
                     "Vote"
                 ],
-                "operationId": "4ab3ff7ff974d6db115b5e332cdb04c5",
+                "operationId": "11f136a263595f58da5b1e3d7bb0e41a",
+                "parameters": [
+                    {
+                        "name": "vote",
+                        "in": "path",
+                        "description": "Vote id",
+                        "required": true,
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/vote"
+                                            }
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Vote"
+                ],
+                "operationId": "8440dbaccf07988729da69f52a2130b1",
                 "parameters": [
                     {
                         "name": "vote",
@@ -500,6 +552,12 @@
                 "in": "header",
                 "bearerFormat": "JWT",
                 "scheme": "bearer"
+            },
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
             }
         }
     },
