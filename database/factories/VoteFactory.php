@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Enums\ModelStatus;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,7 +24,7 @@ class VoteFactory extends Factory
             'description' => $this->faker->paragraph(),
             'start_date' => $this->faker->dateTimeBetween('+1 week', '+2 weeks'),
             'end_date' => $this->faker->dateTimeBetween('+3 weeks', '+4 weeks'),
-            'is_active' => $this->faker->boolean(),
+            'status' => ModelStatus::random(),
             'uuid' => $this->faker->uuid(),
         ];
     }

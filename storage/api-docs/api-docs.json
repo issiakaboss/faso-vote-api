@@ -20,12 +20,12 @@
         }
     ],
     "paths": {
-        "/api/auth/login": {
+        "/auth/login": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
-                "operationId": "6e1bcfed5f0c1b4e03927afc49ae8b6d",
+                "operationId": "80c63ac622014d90034f30d82c11cce8",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -84,12 +84,12 @@
                 }
             }
         },
-        "/api/auth/register": {
+        "/auth/register": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
-                "operationId": "fe7e3fa97ca3e1620cedc4174b6aec18",
+                "operationId": "7761c732affc93ecaeb0577524636b6e",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -152,12 +152,12 @@
                 }
             }
         },
-        "/api/auth/logout": {
+        "/auth/logout": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
-                "operationId": "194304f75d41b034423808f03f279c53",
+                "operationId": "4e09fafeb8298e258f38d1dc53967582",
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -194,12 +194,12 @@
                 ]
             }
         },
-        "/api/votes": {
+        "/votes": {
             "get": {
                 "tags": [
                     "Vote"
                 ],
-                "operationId": "d68d4f27c910b20a1175662523e4d658",
+                "operationId": "2cf4a05d95e5ed00a93da6496a4514ed",
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -242,7 +242,7 @@
                 "tags": [
                     "Vote"
                 ],
-                "operationId": "d059e8fbe5d6c91852a1ac877c2f67da",
+                "operationId": "886fee5b4153df52c614ef81e2cc5cbc",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -318,12 +318,12 @@
                 ]
             }
         },
-        "/api/votes/{vote}": {
+        "/votes/{vote}": {
             "post": {
                 "tags": [
                     "Vote"
                 ],
-                "operationId": "ce20db487dce4c676acbb3240cdb3f54",
+                "operationId": "4ab3ff7ff974d6db115b5e332cdb04c5",
                 "parameters": [
                     {
                         "name": "vote",
@@ -412,7 +412,7 @@
                 "tags": [
                     "Vote"
                 ],
-                "operationId": "ace80e830706a554847331ea4dd35025",
+                "operationId": "b0bcebac070a1abf4e68147241f753ec",
                 "parameters": [
                     {
                         "name": "vote",

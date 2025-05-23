@@ -16,13 +16,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('auth')->group(function () {
-    Route::post('login', [AuthController::class, 'login'])->name('login');
-    Route::post('register', [AuthController::class, 'register'])->name('register');
-    Route::post('logout', [AuthController::class, 'logout'])
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
+    Route::post('/logout', [AuthController::class, 'logout'])
         ->middleware('auth:sanctum')->name('logout');
 });
 
-Route::prefix('vote')->middleware('auth:sanctum')->group(function () {
+Route::prefix('votes')->middleware('auth:sanctum')->group(function () {
     Route::get('', [VoteController::class, 'getVotes'])->name('vote.getVotes');
     Route::post('', [VoteController::class, 'store'])->name('vote.strore');
     Route::put('/{vote}', [VoteController::class, 'update'])->name('vote.update')->whereNumber('vote');

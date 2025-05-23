@@ -12,7 +12,7 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    public function login(Request $request): JsonResource
+    public function login(Request $request)
     {
 
         $request->validate([
@@ -25,6 +25,8 @@ class AuthController extends Controller
                 'email' => trans('auth.failed'),
             ]);
         }
+
+
 
         /** @var User $user */
         $user = Auth::user();
