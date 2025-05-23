@@ -20,61 +20,87 @@
         }
     ],
     "paths": {
-        "/api/vote-groups": {
+        "/api/votes": {
             "get": {
                 "tags": [
-                    "Groupes de vote"
+                    "Vote"
                 ],
-                "summary": "Lister tous les groupes de vote",
-                "operationId": "007d1ac20c6cd6cd275d60a42b82d62a",
+                "operationId": "341414b6b882caa62c650643702da203",
                 "responses": {
                     "200": {
-                        "description": "Liste des groupes de vote",
+                        "description": "Success",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "id": {
-                                                "type": "integer",
-                                                "example": 1
-                                            },
-                                            "title": {
-                                                "type": "string",
-                                                "example": "Élections 2025"
-                                            },
-                                            "slug": {
-                                                "type": "string",
-                                                "example": "elections-2025"
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/vote"
                                             }
                                         },
-                                        "type": "object"
-                                    }
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
-                    "Groupes de vote"
+                    "Vote"
                 ],
-                "summary": "Créer un nouveau groupe de vote",
-                "operationId": "b955f92f0ae21027af92f93e25de657c",
+                "operationId": "ffb4810007bd5651a98c90a8b185f890",
                 "requestBody": {
-                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "title"
+                                    "title",
+                                    "start_date",
+                                    "end_date"
                                 ],
                                 "properties": {
                                     "title": {
                                         "type": "string",
-                                        "example": "Élections Présidentielles 2025"
+                                        "example": "Vote Title"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Vote Description"
+                                    },
+                                    "start_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2023-10-01T00:00:00Z"
+                                    },
+                                    "end_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2023-10-31T23:59:59Z"
+                                    },
+                                    "logo": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "example": "logo.png"
                                     }
                                 },
                                 "type": "object"
@@ -83,23 +109,26 @@
                     }
                 },
                 "responses": {
-                    "201": {
-                        "description": "Groupe de vote créé",
+                    "200": {
+                        "description": "Success",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "id": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/vote"
+                                        },
+                                        "status": {
                                             "type": "integer",
-                                            "example": 1
+                                            "example": 200
                                         },
-                                        "title": {
+                                        "message": {
                                             "type": "string",
-                                            "example": "Élections Présidentielles 2025"
+                                            "example": "Success"
                                         },
-                                        "slug": {
-                                            "type": "string",
-                                            "example": "elections-presidentielles-2025"
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
                                         }
                                     },
                                     "type": "object"
@@ -107,11 +136,178 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/votes/{vote}": {
+            "post": {
+                "tags": [
+                    "Vote"
+                ],
+                "operationId": "6a9c77e3a1997b3a54dc836e154f21e1",
+                "parameters": [
+                    {
+                        "name": "vote",
+                        "in": "path",
+                        "description": "Vote id",
+                        "required": true,
+                        "allowEmptyValue": false,
+                        "example": "1"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "start_date",
+                                    "end_date"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Vote Title"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Vote Description"
+                                    },
+                                    "start_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2023-10-01T00:00:00Z"
+                                    },
+                                    "end_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2023-10-31T23:59:59Z"
+                                    },
+                                    "logo": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "example": "logo.png"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/vote"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Vote"
+                ],
+                "operationId": "370eaaeea8a9133b5670399c21575742",
+                "parameters": [
+                    {
+                        "name": "vote",
+                        "in": "path",
+                        "description": "Vote id",
+                        "required": true,
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/vote"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
             }
         }
     },
     "components": {
+        "schemas": {
+            "vote": {
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "uuid": {
+                        "type": "string"
+                    },
+                    "logo": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            }
+        },
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
@@ -124,8 +320,8 @@
     },
     "tags": [
         {
-            "name": "Groupes de vote",
-            "description": "Groupes de vote"
+            "name": "Vote",
+            "description": "Vote"
         }
     ]
 }

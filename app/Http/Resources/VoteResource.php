@@ -17,7 +17,7 @@ class VoteResource extends JsonResource
         return [
             'title' => $this->title,
             'uuid' => $this->uuid,
-            'logo' => $this->logo(),
+            'logo' => $this->logoUrl(),
             'status' => $this->status->label(),
             'description' => $this->description,
         ];

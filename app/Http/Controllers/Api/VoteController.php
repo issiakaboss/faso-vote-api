@@ -3,81 +3,64 @@
 namespace App\Http\Controllers\Api;
 
 use App\Facades\VoteStorage;
+use App\Helpers\OpenApiHelpers\RequestBodyHelper;
+use App\Helpers\OpenApiHelpers\RequestResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\VoteResource;
 use App\Models\Vote;
 use App\Models\VoteGroup;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use OpenApi\Attributes as OA;
 
 class VoteController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/vote-groups",
-     *     summary="Lister tous les groupes de vote",
-     *     tags={"Groupes de vote"},
-     *
-     *     @OA\Response(
-     *         response=200,
-     *         description="Liste des groupes de vote",
-     *
-     *         @OA\JsonContent(
-     *             type="array",
-     *
-     *             @OA\Items(
-     *
-     *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="title", type="string", example="Élections 2025"),
-     *                 @OA\Property(property="slug", type="string", example="elections-2025")
-     *             )
-     *         )
-     *     )
-     * )
-     */
+    public const BASE_PATH = parent::BASE_PATH . '/votes';
+
+    public const VOTE = 'Vote';
+
+    #[OA\Get(
+        path: self::BASE_PATH . '',
+        tags: [self::VOTE],
+        security: [['sanctum' => []]],
+        responses: [
+            new RequestResponseHelper(ref: 'vote', isCollection: true),
+        ]
+    )]
     public function getVotes()
     {
         return VoteResource::collection(Vote::all());
     }
 
     /**
-     * @OA\Post(
-     *     path="/api/vote-groups",
-     *     summary="Créer un nouveau groupe de vote",
-     *     tags={"Groupes de vote"},
-     *
-     *     @OA\RequestBody(
-     *         required=true,
-     *
-     *         @OA\JsonContent(
-     *             required={"title"},
-     *
-     *             @OA\Property(property="title", type="string", example="Élections Présidentielles 2025")
-     *         )
-     *     ),
-     *
-     *     @OA\Response(
-     *         response=201,
-     *         description="Groupe de vote créé",
-     *
-     *         @OA\JsonContent(
-     *
-     *             @OA\Property(property="id", type="integer", example=1),
-     *             @OA\Property(property="title", type="string", example="Élections Présidentielles 2025"),
-     *             @OA\Property(property="slug", type="string", example="elections-presidentielles-2025")
-     *         )
-     *     )
-     * )
+     * Display the specified resource.
      */
+    public function show(VoteGroup $voteGroup)
+    {
+        //
+    }
+
+    #[OA\Post(
+        path: self::BASE_PATH . '',
+        tags: [self::VOTE],
+        requestBody: new RequestBodyHelper(
+            [
+                new OA\Property(property: 'title', type: 'string', example: 'Vote Title'),
+                new OA\Property(property: 'description', type: 'string', example: 'Vote Description'),
+                new OA\Property(property: 'start_date', type: 'string', format: 'date-time', example: '2023-10-01T00:00:00Z'),
+                new OA\Property(property: 'end_date', type: 'string', format: 'date-time', example: '2023-10-31T23:59:59Z'),
+                new OA\Property(property: 'logo', type: 'string', format: 'binary', example: 'logo.png'),
+            ],
+            required: ['title', 'start_date', 'end_date'],
+        ),
+        security: [['sanctum' => []]],
+        responses: [
+            new RequestResponseHelper(ref: 'vote'),
+        ]
+    )]
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|string',
-            'description' => 'nullable|string',
-            'start_date' => 'required|date|after_or_equal:today',
-            'end_date' => 'required|date|after:start_date',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        $request->validate(Vote::validationRules());
 
         $logoPath = $request->file('logo') ? VoteStorage::put(VOTE_LOGO_PATH, $request->file('logo')) : null;
 
@@ -94,30 +77,73 @@ class VoteController extends Controller
         return response()->json([
             'message' => 'Vote created successfully',
             'data' => new VoteResource($vote),
-        ])->setStatusCode(200);
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(VoteGroup $voteGroup)
+    #[OA\Post(
+        path: self::BASE_PATH . '/{vote}',
+        tags: [self::VOTE],
+        parameters: [
+            new OA\Parameter(name: 'vote', in: 'path', description: 'Vote id', required: true, example: '1', allowEmptyValue: false),
+        ],
+        requestBody: new RequestBodyHelper(
+            [
+                new OA\Property(property: 'title', type: 'string', example: 'Vote Title'),
+                new OA\Property(property: 'description', type: 'string', example: 'Vote Description'),
+                new OA\Property(property: 'start_date', type: 'string', format: 'date-time', example: '2023-10-01T00:00:00Z'),
+                new OA\Property(property: 'end_date', type: 'string', format: 'date-time', example: '2023-10-31T23:59:59Z'),
+                new OA\Property(property: 'logo', type: 'string', format: 'binary', example: 'logo.png'),
+            ],
+            required: ['title', 'start_date', 'end_date'],
+        ),
+        security: [['sanctum' => []]],
+        responses: [
+            new RequestResponseHelper(ref: 'vote'),
+        ]
+    )]
+    public function update(Request $request, Vote $vote)
     {
-        //
+
+        $request->validate(Vote::validationRules());
+
+        $logoPath = $request->file('logo') ? VoteStorage::put(VOTE_LOGO_PATH, $request->file('logo')) : null;
+
+        $vote->update([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'start_date' => Carbon::parse($request->input('start_date')),
+            'end_date' => Carbon::parse($request->input('end_date')),
+            'logo' => $logoPath,
+        ]);
+
+        $vote->deleteLogo();
+
+        return response()->json([
+            'message' => 'Vote updated successfully',
+            'data' => new VoteResource($vote),
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, VoteGroup $voteGroup)
+    #[OA\Delete(
+        path: self::BASE_PATH . '/{vote}',
+        tags: [self::VOTE],
+        parameters: [
+            new OA\Parameter(name: 'vote', in: 'path', description: 'Vote id', required: true, example: 1),
+        ],
+        security: [['sanctum' => []]],
+        responses: [
+            new RequestResponseHelper(ref: 'vote'),
+        ]
+    )]
+    public function destroy(Vote $vote)
     {
-        //
-    }
+        $vote->deleteLogo();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(VoteGroup $voteGroup)
-    {
-        //
+        $vote->delete();
+
+        return response()->json([
+            'message' => 'Vote deleted successfully',
+            'data' => new VoteResource($vote),
+        ]);
     }
 }

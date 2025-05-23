@@ -26,6 +26,17 @@ class Vote extends BaseModel
         'status' => ModelStatus::class,
     ];
 
+    public static function validationRules(): array
+    {
+        return [
+            'title' => 'required|string',
+            'description' => 'nullable|string',
+            'start_date' => 'required|date|after_or_equal:today',
+            'end_date' => 'required|date|after:start_date',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ];
+    }
+
     public function candidate(): BelongsTo
     {
         return $this->belongsTo(Candidate::class);
@@ -41,8 +52,15 @@ class Vote extends BaseModel
         return $this->hasMany(Votant::class);
     }
 
-    public function logo(): ?string
+    public function logoUrl(): ?string
     {
         return VoteStorage::url($this->logo);
+    }
+
+    public function deleteLogo(): void
+    {
+        if ($this->logo) {
+            VoteStorage::delete($this->logo);
+        }
     }
 }

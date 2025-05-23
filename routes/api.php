@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Api\VoteController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,11 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('login', [\App\Http\Controllers\Api\AuthController::class, 'login'])->name('login');
 
-Route::prefix('vote')->group(function () {
+Route::prefix('vote')->middleware('auth:sanctum')->group(function () {
     Route::get('', [VoteController::class, 'getVotes'])->name('vote.getVotes');
     Route::post('', [VoteController::class, 'store'])->name('vote.strore');
+    Route::put('/{vote}', [VoteController::class, 'update'])->name('vote.update')->whereNumber('vote');
+    Route::delete('/{vote}', [VoteController::class, 'destroy'])->name('vote.destroy')->whereNumber('vote');
 });
