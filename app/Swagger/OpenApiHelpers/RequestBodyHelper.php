@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers\OpenApiHelpers;
+namespace App\Swagger\OpenApiHelpers;
 
 use OpenApi\Attributes as OA;
 

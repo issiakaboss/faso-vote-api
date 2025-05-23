@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Annotations;
+namespace App\Swagger;
 
 use OpenApi\Attributes as OA;
 
@@ -16,4 +16,7 @@ use OpenApi\Attributes as OA;
     ]
 )]
 
-class Annotation {}
+abstract class Docs
+{
+    public const BASE_PATH = '/api';
+}

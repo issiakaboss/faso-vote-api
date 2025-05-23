@@ -25,7 +25,7 @@
                 "tags": [
                     "Vote"
                 ],
-                "operationId": "341414b6b882caa62c650643702da203",
+                "operationId": "d68d4f27c910b20a1175662523e4d658",
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -68,7 +68,7 @@
                 "tags": [
                     "Vote"
                 ],
-                "operationId": "ffb4810007bd5651a98c90a8b185f890",
+                "operationId": "d059e8fbe5d6c91852a1ac877c2f67da",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -149,7 +149,7 @@
                 "tags": [
                     "Vote"
                 ],
-                "operationId": "6a9c77e3a1997b3a54dc836e154f21e1",
+                "operationId": "ce20db487dce4c676acbb3240cdb3f54",
                 "parameters": [
                     {
                         "name": "vote",
@@ -238,7 +238,7 @@
                 "tags": [
                     "Vote"
                 ],
-                "operationId": "370eaaeea8a9133b5670399c21575742",
+                "operationId": "ace80e830706a554847331ea4dd35025",
                 "parameters": [
                     {
                         "name": "vote",
