@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\VoteController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,7 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('login', [\App\Http\Controllers\Api\AuthController::class, 'login'])->name('login');
+Route::prefix('auth')->group(function () {
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+    Route::post('register', [AuthController::class, 'register'])->name('register');
+    Route::post('logout', [AuthController::class, 'logout'])
+        ->middleware('auth:sanctum')->name('logout');
+});
 
 Route::prefix('vote')->middleware('auth:sanctum')->group(function () {
     Route::get('', [VoteController::class, 'getVotes'])->name('vote.getVotes');

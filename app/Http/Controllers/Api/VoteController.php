@@ -9,14 +9,15 @@ use App\Models\Vote;
 use App\Models\VoteGroup;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class VoteController extends Controller
 {
-    public const BASE_PATH = parent::BASE_PATH.'/votes';
+    public const BASE_PATH = parent::BASE_PATH . '/votes';
 
     public const VOTE = 'Vote';
 
-    public function getVotes()
+    public function getVotes(): JsonResource
     {
         return VoteResource::collection(Vote::all());
     }
@@ -45,10 +46,7 @@ class VoteController extends Controller
             'logo' => $logoPath,
         ]);
 
-        return response()->json([
-            'message' => 'Vote created successfully',
-            'data' => new VoteResource($vote),
-        ]);
+        return self::successJson(new VoteResource($vote), 'Vote created successfully');
     }
 
     public function update(Request $request, Vote $vote)
@@ -68,10 +66,7 @@ class VoteController extends Controller
 
         $vote->deleteLogo();
 
-        return response()->json([
-            'message' => 'Vote updated successfully',
-            'data' => new VoteResource($vote),
-        ]);
+        return self::successJson(new VoteResource($vote), 'Vote updated successfully');
     }
 
     public function destroy(Vote $vote)
@@ -80,9 +75,6 @@ class VoteController extends Controller
 
         $vote->delete();
 
-        return response()->json([
-            'message' => 'Vote deleted successfully',
-            'data' => new VoteResource($vote),
-        ]);
+        return self::successJson(new VoteResource($vote), 'Vote deleted successfully');
     }
 }
