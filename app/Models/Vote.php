@@ -7,6 +7,8 @@ use App\Models\Enums\ModelStatus;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use function Psy\sh;
+
 class Vote extends BaseModel
 {
     protected $fillable = [
@@ -55,6 +57,11 @@ class Vote extends BaseModel
     public function logoUrl(): ?string
     {
         return VoteStorage::url($this->logo);
+    }
+
+    public function duration(): string
+    {
+        return $this->end_date->diffForHumans();
     }
 
     public function deleteLogo(): void

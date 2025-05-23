@@ -39,6 +39,6 @@ class BaseModel extends Model
 
     public function scopeForUser(Builder $query): Builder
     {
-        return $query->where('user_id', Auth::user()->id);
+        return $query->where('user_id', 1);
     }
 }

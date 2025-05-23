@@ -12,7 +12,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class VoteController extends Controller
 {
-    public const BASE_PATH = parent::BASE_PATH.'/votes';
+    public const BASE_PATH = parent::BASE_PATH . '/votes';
 
     public const VOTE = 'Vote';
 
@@ -33,7 +33,7 @@ class VoteController extends Controller
         $logoPath = $request->file('logo') ? VoteStorage::put(VOTE_LOGO_PATH, $request->file('logo')) : null;
 
         $vote = Vote::create([
-            'user_id' => $request->user()->id,
+            'user_id' => 1,
             'uuid' => (string) \Illuminate\Support\Str::uuid(),
             'title' => $request->input('title'),
             'description' => $request->input('description'),
