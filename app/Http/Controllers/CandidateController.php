@@ -18,7 +18,7 @@ class CandidateController extends Controller
 
         $candidate = Candidate::create([
             'vote_id' => $request->vote_id,
-            'name' => $request->name,
+            'full_name' => $request->full_name,
             'description' => $request->description,
             'profession' => $request->profession,
             'university' => $request->university,
@@ -41,7 +41,7 @@ class CandidateController extends Controller
         }
 
         $candidate->update([
-            'name' => $request->name,
+            'full_name' => $request->full_name,
             'description' => $request->description,
             'profession' => $request->profession,
             'university' => $request->university,

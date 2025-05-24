@@ -15,18 +15,27 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class VoteController extends Controller
 {
-    public const BASE_PATH = parent::BASE_PATH.'/votes';
+    public const BASE_PATH = parent::BASE_PATH . '/votes';
 
     public const VOTE = 'Vote';
+
+
 
     public function getVotes()
     {
         return VoteResource::collection(Vote::forUser()->get());
     }
 
-    public function show(Vote $vote): JsonResource
+    public function show(Vote $vote)
     {
-        return VoteResource::collection($vote->with('candidates')->get());
+        return new VoteResource($vote->load('candidates'));
+    }
+
+    public function showByUuid(string $uuid)
+    {
+        $vote = Vote::byUiid($uuid)->firstOrFail();
+
+        return new VoteResource($vote->load('candidates'));
     }
 
     public function vote(Vote $vote, Candidate $candidate)

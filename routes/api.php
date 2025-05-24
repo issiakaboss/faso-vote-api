@@ -26,21 +26,24 @@ Route::prefix('auth')->group(function () {
 // Route::middleware('auth:sanctum')->group(function () {});
 
 Route::prefix('candidates')->group(function () {
-    Route::get('/{candidate}/edit', [CandidateController::class, 'edit'])->name('candidate.edit')->whereNumber('candidate');
-    Route::post('', [CandidateController::class, 'store'])->name('candidate.store');
-    Route::put('/{candidate}', [CandidateController::class, 'update'])->name('candidate.update')->whereNumber('candidate');
-    Route::delete('/{candidate}', [CandidateController::class, 'destroy'])->name('candidate.destroy')->whereNumber('candidate');
+    Route::get('/{candidate}/edit', [CandidateController::class, 'edit'])->name('admin.candidate.edit')->whereNumber('candidate');
+    Route::post('', [CandidateController::class, 'store'])->name('admin.candidate.store');
+    Route::put('/{candidate}', [CandidateController::class, 'update'])->name('admin.candidate.update')->whereNumber('candidate');
+    Route::delete('/{candidate}', [CandidateController::class, 'destroy'])->name('admin.candidate.destroy')->whereNumber('candidate');
 });
 
 Route::prefix('votes')->group(function () {
-    Route::get('', [VoteController::class, 'getVotes'])->name('vote.getVotes');
-    Route::get('/{vote}/edit', [VoteController::class, 'edit'])->name('vote.edit')->whereNumber('vote');
-    Route::get('/{vote}', [VoteController::class, 'show'])->name('vote.show')->whereNumber('vote');
-    Route::post('', [VoteController::class, 'store'])->name('vote.store');
-    Route::put('/{vote}', [VoteController::class, 'update'])->name('vote.update')->whereNumber('vote');
-    Route::delete('/{vote}', [VoteController::class, 'destroy'])->name('vote.destroy')->whereNumber('vote');
+    Route::get('', [VoteController::class, 'getVotes'])->name('admin.vote.getVotes');
+    Route::get('/{vote}/edit', [VoteController::class, 'edit'])->name('admin.vote.edit')->whereNumber('vote');
+    Route::get('/{vote}', [VoteController::class, 'show'])->name('admin.vote.show')->whereNumber('vote');
+    Route::post('', [VoteController::class, 'store'])->name('admin.vote.store');
+    Route::put('/{vote}', [VoteController::class, 'update'])->name('admin.vote.update')->whereNumber('vote');
+    Route::delete('/{vote}', [VoteController::class, 'destroy'])->name('admin.vote.destroy')->whereNumber('vote');
     Route::post('/{vote}/{candidate}/vote', [VoteController::class, 'vote'])
-        ->name('vote.vote')
+        ->name('admin.vote.vote')
         ->whereNumber('vote')
         ->whereNumber('candidate');
 });
+
+Route::get('vote/{uuid}', [VoteController::class, 'showByUuid'])
+    ->name('vote.showByUuid');

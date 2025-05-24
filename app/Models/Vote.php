@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Facades\VoteStorage;
 use App\Models\Enums\ModelStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -37,10 +38,6 @@ class Vote extends BaseModel
         ];
     }
 
-    public function candidate(): BelongsTo
-    {
-        return $this->belongsTo(Candidate::class);
-    }
 
     public function candidates(): HasMany
     {
@@ -55,7 +52,7 @@ class Vote extends BaseModel
     public function logoUrl(): ?string
     {
 
-        return $this->logo ? asset(IMAGE_PREFIX.$this->logo) : null;
+        return $this->logo ? asset(IMAGE_PREFIX . $this->logo) : null;
     }
 
     public function duration(): string
@@ -89,5 +86,15 @@ class Vote extends BaseModel
     {
         $this->status = ModelStatus::INACTIVE;
         $this->save();
+    }
+
+    public function url(): string
+    {
+        return route('vote.showByUuid', ['uuid' => $this->uuid]);
+    }
+
+    public function scopeByUiid(Builder $query, string $uuid): Builder
+    {
+        return $query->where('uuid', $uuid);
     }
 }
