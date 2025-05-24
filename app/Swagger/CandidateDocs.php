@@ -11,12 +11,13 @@ use OpenApi\Attributes as OA;
     type: 'object',
     properties: [
         new OA\Property(property: 'id', type: 'integer'),
-        new OA\Property(property: 'name', type: 'string'),
+        new OA\Property(property: 'full_name', type: 'string'),
         new OA\Property(property: 'description', type: 'string'),
         new OA\Property(property: 'profession', type: 'string'),
         new OA\Property(property: 'university', type: 'string'),
         new OA\Property(property: 'photo', type: 'string'),
         new OA\Property(property: 'votes_count', type: 'integer'),
+        new OA\Property(property: 'theme', type: 'string'),
     ]
 )]
 
@@ -45,13 +46,14 @@ class CandidateDocs extends Docs
         requestBody: new RequestBodyHelper(
             [
                 new OA\Property(property: 'vote_id', type: 'integer', example: 1),
-                new OA\Property(property: 'name', type: 'string', example: 'Candidate Name'),
+                new OA\Property(property: 'full_name', type: 'string', example: 'Candidate Name'),
                 new OA\Property(property: 'description', type: 'string', example: 'Candidate Description'),
                 new OA\Property(property: 'profession', type: 'string', example: 'Candidate Profession'),
                 new OA\Property(property: 'university', type: 'string', example: 'Candidate University'),
                 new OA\Property(property: 'photo', type: 'string', format: 'binary'),
+                new OA\Property(property: 'theme', type: 'string', example: 'Candidate Theme'),
             ],
-            required: ['vote_id',  'name'],
+            required: ['vote_id',  'full_name'],
         ),
         security: [['sanctum' => []]],
         responses: [
@@ -69,11 +71,12 @@ class CandidateDocs extends Docs
         requestBody: new RequestBodyHelper(
             [
                 new OA\Property(property: 'vote_id', type: 'integer', example: 1),
-                new OA\Property(property: 'name', type: 'string', example: 'Candidate Name'),
+                new OA\Property(property: 'full_name', type: 'string', example: 'Candidate Name'),
                 new OA\Property(property: 'description', type: 'string', example: 'Candidate Description'),
                 new OA\Property(property: 'profession', type: 'string', example: 'Candidate Profession'),
                 new OA\Property(property: 'university', type: 'string', example: 'Candidate University'),
                 new OA\Property(property: 'photo', type: 'string', format: 'binary'),
+                new OA\Property(property: 'theme', type: 'string', example: 'Candidate Theme'),
             ],
             required: ['vote_id',  'name'],
         ),

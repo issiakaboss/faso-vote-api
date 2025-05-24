@@ -286,6 +286,10 @@
                                     "photo": {
                                         "type": "string",
                                         "format": "binary"
+                                    },
+                                    "theme": {
+                                        "type": "string",
+                                        "example": "Candidate Theme"
                                     }
                                 },
                                 "type": "object"
@@ -428,6 +432,10 @@
                                     "photo": {
                                         "type": "string",
                                         "format": "binary"
+                                    },
+                                    "theme": {
+                                        "type": "string",
+                                        "example": "Candidate Theme"
                                     }
                                 },
                                 "type": "object"
@@ -984,6 +992,9 @@
                     },
                     "votes_count": {
                         "type": "integer"
+                    },
+                    "theme": {
+                        "type": "string"
                     }
                 },
                 "type": "object"

@@ -12,11 +12,10 @@ use App\Services\VoteService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Validation\ValidationException;
 
 class VoteController extends Controller
 {
-    public const BASE_PATH = parent::BASE_PATH . '/votes';
+    public const BASE_PATH = parent::BASE_PATH.'/votes';
 
     public const VOTE = 'Vote';
 
@@ -39,6 +38,7 @@ class VoteController extends Controller
 
         if ($vote->isEnded()) {
             $vote->lock();
+
             return self::errorJson('Le vote est terminé.', 403);
         }
 

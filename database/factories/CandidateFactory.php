@@ -19,10 +19,12 @@ class CandidateFactory extends Factory
     {
         return [
             'vote_id' => Vote::random() ?: Vote::factory(),
-            'name' => $this->faker->name(),
+            'full_name' => $this->faker->name(),
             'description' => $this->faker->paragraph(),
             'profession' => $this->faker->word(),
             'votes_count' => $this->faker->numberBetween(0, 100),
+            'theme' => $this->faker->word(),
+            'university' => $this->faker->company(),
         ];
     }
 }

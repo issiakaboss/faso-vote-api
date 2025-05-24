@@ -29,8 +29,6 @@ class VoteService
         }
     }
 
-
-
     private function getErrorMessage(): ?string
     {
         if (! $this->vote->isActive()) {

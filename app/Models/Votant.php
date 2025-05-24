@@ -9,5 +9,9 @@ class Votant extends BaseModel
         'candidate_id',
         'email',
         'phone',
+        'status',
+        'ip_address',
+        'user_agent',
+        'country',
     ];
 }

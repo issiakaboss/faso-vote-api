@@ -9,12 +9,13 @@ class Candidate extends BaseModel
 {
     protected $fillable = [
         'vote_id',
-        'name',
+        'full_name',
         'description',
         'profession',
         'votes_count',
         'photo',
         'university',
+        'theme',
     ];
 
     public function votes(): HasMany
@@ -25,12 +26,13 @@ class Candidate extends BaseModel
     public static function validationRules(): array
     {
         return [
-            'name' => 'required|string|max:255',
+            'full_name' => 'required|string|max:255',
             'vote_id' => 'required|exists:votes,id',
             'description' => 'nullable|string',
             'profession' => 'nullable|string|max:100',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'university' => 'nullable|string|max:255',
+            'theme' => 'nullable|string|max:255',
         ];
     }
 

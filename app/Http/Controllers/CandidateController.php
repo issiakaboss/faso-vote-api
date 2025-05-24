@@ -23,6 +23,7 @@ class CandidateController extends Controller
             'profession' => $request->profession,
             'university' => $request->university,
             'photo' => $photo,
+            'theme' => $request->theme,
         ]);
 
         return self::successJson(new CandidateResource($candidate), 'Candidate created successfully');
@@ -45,6 +46,7 @@ class CandidateController extends Controller
             'profession' => $request->profession,
             'university' => $request->university,
             'photo' => $photoPath,
+            'theme' => $request->theme,
         ]);
 
         return self::successJson(new CandidateResource($candidate), 'Candidate updated successfully');
