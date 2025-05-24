@@ -12,7 +12,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class VoteController extends Controller
 {
-    public const BASE_PATH = parent::BASE_PATH . '/votes';
+    public const BASE_PATH = parent::BASE_PATH.'/votes';
 
     public const VOTE = 'Vote';
 
@@ -43,6 +43,13 @@ class VoteController extends Controller
         ]);
 
         return self::successJson(new VoteResource($vote->refresh()), 'Vote created successfully');
+    }
+
+    public function edit(Vote $vote): JsonResource
+    {
+        $vote->logo = $vote->logoUrl();
+
+        return new JsonResource($vote);
     }
 
     public function update(Request $request, Vote $vote)

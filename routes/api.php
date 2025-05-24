@@ -23,20 +23,18 @@ Route::prefix('auth')->group(function () {
         ->middleware('auth:sanctum')->name('logout');
 });
 
-Route::middleware('auth:sanctum')->group(function () {
+// Route::middleware('auth:sanctum')->group(function () {});
 
-
-
-    Route::prefix('candidates')->group(function () {
-        Route::post('', [CandidateController::class, 'store'])->name('candidate.store');
-        Route::put('/{candidate}', [CandidateController::class, 'update'])->name('candidate.update')->whereNumber('candidate');
-        Route::delete('/{candidate}', [CandidateController::class, 'destroy'])->name('candidate.destroy')->whereNumber('candidate');
-    });
+Route::prefix('candidates')->group(function () {
+    Route::get('/{candidate}/edit', [CandidateController::class, 'edit'])->name('candidate.edit')->whereNumber('candidate');
+    Route::post('', [CandidateController::class, 'store'])->name('candidate.store');
+    Route::put('/{candidate}', [CandidateController::class, 'update'])->name('candidate.update')->whereNumber('candidate');
+    Route::delete('/{candidate}', [CandidateController::class, 'destroy'])->name('candidate.destroy')->whereNumber('candidate');
 });
-
 
 Route::prefix('votes')->group(function () {
     Route::get('', [VoteController::class, 'getVotes'])->name('vote.getVotes');
+    Route::get('/{vote}/edit', [VoteController::class, 'edit'])->name('vote.edit')->whereNumber('vote');
     Route::get('/{vote}', [VoteController::class, 'show'])->name('vote.show')->whereNumber('vote');
     Route::post('', [VoteController::class, 'store'])->name('vote.store');
     Route::put('/{vote}', [VoteController::class, 'update'])->name('vote.update')->whereNumber('vote');

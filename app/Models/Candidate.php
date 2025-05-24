@@ -36,7 +36,7 @@ class Candidate extends BaseModel
 
     public function photoUrl(): ?string
     {
-        return VoteStorage::url($this->photo);
+        return $this->photo ? VoteStorage::url($this->photo) : null;
     }
 
     public function deletePhoto(): void

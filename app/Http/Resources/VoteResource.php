@@ -21,8 +21,8 @@ class VoteResource extends JsonResource
             'duration' => $this->duration(),
             'logo' => $this->logoUrl(),
             'status' => $this->status->label(),
-            'status_color' => $this->status->getColor(),
-            'date' => $this->start_date->calendar(),
+            'status_color' => $this->status->getFlutterColor(),
+            'date' => $this->start_date->translatedFormat('D d M Y \à H\hi'),
             'description' => $this->description,
             'candidates' => $this->whenNotNull(CandidateResource::collection($this->whenLoaded('candidates'))),
         ];

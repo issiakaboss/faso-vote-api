@@ -19,12 +19,12 @@ use OpenApi\Attributes as OA;
 )]
 class VoteDocs extends Docs
 {
-    public const BASE_PATH = parent::BASE_PATH . '/votes';
+    public const BASE_PATH = parent::BASE_PATH.'/votes';
 
     public const VOTE = 'Vote';
 
     #[OA\Get(
-        path: self::BASE_PATH . '',
+        path: self::BASE_PATH.'',
         tags: [self::VOTE],
         security: [['sanctum' => []]],
         responses: [
@@ -34,7 +34,7 @@ class VoteDocs extends Docs
     public function getVotes() {}
 
     #[OA\Get(
-        path: self::BASE_PATH . '/{vote}',
+        path: self::BASE_PATH.'/{vote}',
         tags: [self::VOTE],
         security: [['sanctum' => []]],
         parameters: [
@@ -46,8 +46,21 @@ class VoteDocs extends Docs
     )]
     public function show() {}
 
+    #[OA\Get(
+        path: self::BASE_PATH.'/{vote}/edit',
+        tags: [self::VOTE],
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(name: 'vote', in: 'path', description: 'Vote id', required: true, example: 1),
+        ],
+        responses: [
+            new RequestResponseHelper(ref: 'vote', isCollection: true),
+        ]
+    )]
+    public function edit() {}
+
     #[OA\Post(
-        path: self::BASE_PATH . '',
+        path: self::BASE_PATH.'',
         tags: [self::VOTE],
         requestBody: new RequestBodyHelper(
             [
@@ -67,7 +80,7 @@ class VoteDocs extends Docs
     public function store() {}
 
     #[OA\Put(
-        path: self::BASE_PATH . '/{vote}',
+        path: self::BASE_PATH.'/{vote}',
         tags: [self::VOTE],
         parameters: [
             new OA\Parameter(name: 'vote', in: 'path', description: 'Vote id', required: true, example: '1', allowEmptyValue: false),
@@ -90,7 +103,7 @@ class VoteDocs extends Docs
     public function update() {}
 
     #[OA\Delete(
-        path: self::BASE_PATH . '/{vote}',
+        path: self::BASE_PATH.'/{vote}',
         tags: [self::VOTE],
         parameters: [
             new OA\Parameter(name: 'vote', in: 'path', description: 'Vote id', required: true, example: 1),

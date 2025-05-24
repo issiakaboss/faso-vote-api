@@ -16,4 +16,12 @@ enum ModelStatus: string implements AdvancedEnumInterface
             self::INACTIVE => 'danger',
         };
     }
+
+    public function getFlutterColor(): string
+    {
+        return match ($this) {
+            self::ACTIVE => '0xFF4CAF50',
+            self::INACTIVE => '0xFFB00020'
+        };
+    }
 }

@@ -6,6 +6,7 @@ use App\Facades\VoteStorage;
 use App\Http\Resources\CandidateResource;
 use App\Models\Candidate;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class CandidateController extends Controller
 {
@@ -52,6 +53,13 @@ class CandidateController extends Controller
     public function show(Candidate $candidate)
     {
         return self::successJson(new CandidateResource($candidate));
+    }
+
+    public function edit(Candidate $candidate)
+    {
+        $candidate->photo = $candidate->photoUrl();
+
+        return new JsonResource($candidate);
     }
 
     public function destroy(Candidate $candidate)

@@ -781,6 +781,60 @@
                     }
                 ]
             }
+        },
+        "/votes/{vote}/edit": {
+            "get": {
+                "tags": [
+                    "Vote"
+                ],
+                "operationId": "d1bf2fd5f883897fb254422321e67142",
+                "parameters": [
+                    {
+                        "name": "vote",
+                        "in": "path",
+                        "description": "Vote id",
+                        "required": true,
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/vote"
+                                            }
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
         }
     },
     "components": {

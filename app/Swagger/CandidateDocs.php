@@ -6,7 +6,6 @@ use App\Swagger\OpenApiHelpers\RequestBodyHelper;
 use App\Swagger\OpenApiHelpers\RequestResponseHelper;
 use OpenApi\Attributes as OA;
 
-
 #[OA\Schema(
     schema: 'candidate',
     type: 'object',
@@ -23,13 +22,25 @@ use OpenApi\Attributes as OA;
 
 class CandidateDocs extends Docs
 {
-
-    public const BASE_PATH = parent::BASE_PATH . '/candidates';
+    public const BASE_PATH = parent::BASE_PATH.'/candidates';
 
     public const CANDIDATE = 'Candidate';
 
+    #[OA\Delete(
+        path: self::BASE_PATH.'/{candidate}/edit',
+        tags: [self::CANDIDATE],
+        parameters: [
+            new OA\Parameter(name: 'candidate', in: 'path', description: 'Candidate id', required: true, example: 1),
+        ],
+        security: [['sanctum' => []]],
+        responses: [
+            new RequestResponseHelper(ref: 'candidate', isCollection: true),
+        ]
+    )]
+    public function edit() {}
+
     #[OA\Post(
-        path: self::BASE_PATH . '',
+        path: self::BASE_PATH.'',
         tags: [self::CANDIDATE],
         requestBody: new RequestBodyHelper(
             [
@@ -50,7 +61,7 @@ class CandidateDocs extends Docs
     public function store() {}
 
     #[OA\Put(
-        path: self::BASE_PATH . '/{candidate}',
+        path: self::BASE_PATH.'/{candidate}',
         tags: [self::CANDIDATE],
         parameters: [
             new OA\Parameter(name: 'candidate', in: 'path', description: 'Candidate id', required: true, example: 1),
@@ -74,7 +85,7 @@ class CandidateDocs extends Docs
     public function update() {}
 
     #[OA\Get(
-        path: self::BASE_PATH . '/{candidate}',
+        path: self::BASE_PATH.'/{candidate}',
         tags: [self::CANDIDATE],
         security: [['sanctum' => []]],
         parameters: [
@@ -87,14 +98,14 @@ class CandidateDocs extends Docs
     public function show() {}
 
     #[OA\Delete(
-        path: self::BASE_PATH . '/{candidate}',
+        path: self::BASE_PATH.'/{candidate}',
         tags: [self::CANDIDATE],
         parameters: [
             new OA\Parameter(name: 'candidate', in: 'path', description: 'Candidate id', required: true, example: 1),
         ],
         security: [['sanctum' => []]],
         responses: [
-            new RequestResponseHelper(ref: 'vote'),
+            new RequestResponseHelper(ref: 'candidate'),
         ]
     )]
     public function destroy() {}
