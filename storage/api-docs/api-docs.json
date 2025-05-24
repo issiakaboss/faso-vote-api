@@ -194,6 +194,60 @@
                 ]
             }
         },
+        "/candidates/{candidate}/edit": {
+            "delete": {
+                "tags": [
+                    "Candidate"
+                ],
+                "operationId": "f38ed037166b79a45443159d776bac18",
+                "parameters": [
+                    {
+                        "name": "candidate",
+                        "in": "path",
+                        "description": "Candidate id",
+                        "required": true,
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/candidate"
+                                            }
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/candidates": {
             "post": {
                 "tags": [
@@ -438,7 +492,7 @@
                                 "schema": {
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/vote"
+                                            "$ref": "#/components/schemas/candidate"
                                         },
                                         "status": {
                                             "type": "integer",
@@ -809,6 +863,64 @@
                                             "items": {
                                                 "$ref": "#/components/schemas/vote"
                                             }
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/votes/{vote}/{candidate}/vote": {
+            "post": {
+                "tags": [
+                    "Vote"
+                ],
+                "operationId": "8f76fac91e86771efe7518c14f865815",
+                "parameters": [
+                    {
+                        "name": "vote",
+                        "in": "path",
+                        "description": "Vote id",
+                        "required": true,
+                        "example": 1
+                    },
+                    {
+                        "name": "candidate",
+                        "in": "path",
+                        "description": "Candidate id",
+                        "required": true,
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/candidate"
                                         },
                                         "status": {
                                             "type": "integer",

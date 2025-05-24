@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->dateTime('start_date');
             $table->dateTime('end_date');
-            $table->enum('status', ModelStatus::values())->default(ModelStatus::INACTIVE->value);
+            $table->enum('status', ModelStatus::values())->default(ModelStatus::ACTIVE->value);
             $table->timestamps();
         });
     }

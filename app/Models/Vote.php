@@ -55,7 +55,7 @@ class Vote extends BaseModel
     public function logoUrl(): ?string
     {
 
-        return $this->logo ? asset(IMAGE_PREFIX.$this->logo) : null;
+        return $this->logo ? asset(IMAGE_PREFIX . $this->logo) : null;
     }
 
     public function duration(): string
@@ -68,5 +68,26 @@ class Vote extends BaseModel
         if ($this->logo) {
             VoteStorage::delete($this->logo);
         }
+    }
+
+    public function isEnded(): bool
+    {
+        return $this->end_date->isPast();
+    }
+
+    public function isStarted(): bool
+    {
+        return $this->start_date->isPast();
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status->equals(ModelStatus::ACTIVE);
+    }
+
+    public function lock(): void
+    {
+        $this->status = ModelStatus::INACTIVE;
+        $this->save();
     }
 }

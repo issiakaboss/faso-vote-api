@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->unique(['vote_id', 'email']);
             $table->unique(['vote_id', 'phone']);
+            $table->boolean('is_valid')->default(false);
             $table->timestamps();
         });
     }

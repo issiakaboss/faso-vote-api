@@ -16,6 +16,7 @@ Route::get('images/{path}', function ($path) {
         return VoteStorage::response($path, null, [
             'Cache-Control' => 'public, max-age=86400',
             'Expires' => now()->addDay()->toRfc7231String(),
+            "Access-Control-Allow-Origin" => "*",
         ]);
     }
     abort(404);

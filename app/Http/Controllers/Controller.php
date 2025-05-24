@@ -17,4 +17,13 @@ abstract class Controller
             'message' => $message,
         ]);
     }
+
+    public static function errorJson(string $message, int $status = 400): JsonResource
+    {
+        return new JsonResource([
+            'success' => false,
+            'status' => $status,
+            'message' => $message,
+        ]);
+    }
 }

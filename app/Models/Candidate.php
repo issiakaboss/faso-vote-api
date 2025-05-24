@@ -45,4 +45,9 @@ class Candidate extends BaseModel
             VoteStorage::delete($this->photo);
         }
     }
+
+    public function incrementVotes(): void
+    {
+        $this->increment('votes_count');
+    }
 }
