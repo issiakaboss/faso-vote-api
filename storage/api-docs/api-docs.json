@@ -20,61 +20,28 @@
         }
     ],
     "paths": {
-        "/api/vote-groups": {
-            "get": {
-                "tags": [
-                    "Groupes de vote"
-                ],
-                "summary": "Lister tous les groupes de vote",
-                "operationId": "007d1ac20c6cd6cd275d60a42b82d62a",
-                "responses": {
-                    "200": {
-                        "description": "Liste des groupes de vote",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "id": {
-                                                "type": "integer",
-                                                "example": 1
-                                            },
-                                            "title": {
-                                                "type": "string",
-                                                "example": "Élections 2025"
-                                            },
-                                            "slug": {
-                                                "type": "string",
-                                                "example": "elections-2025"
-                                            }
-                                        },
-                                        "type": "object"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
+        "/auth/login": {
             "post": {
                 "tags": [
-                    "Groupes de vote"
+                    "Auth"
                 ],
-                "summary": "Créer un nouveau groupe de vote",
-                "operationId": "b955f92f0ae21027af92f93e25de657c",
+                "operationId": "80c63ac622014d90034f30d82c11cce8",
                 "requestBody": {
-                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "title"
+                                    "email",
+                                    "password"
                                 ],
                                 "properties": {
-                                    "title": {
+                                    "email": {
                                         "type": "string",
-                                        "example": "Élections Présidentielles 2025"
+                                        "example": "test@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password"
                                     }
                                 },
                                 "type": "object"
@@ -83,23 +50,30 @@
                     }
                 },
                 "responses": {
-                    "201": {
-                        "description": "Groupe de vote créé",
+                    "200": {
+                        "description": "Success",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "id": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/user"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "3RsOxSU2byZe8209aEW2j"
+                                        },
+                                        "status": {
                                             "type": "integer",
-                                            "example": 1
+                                            "example": 200
                                         },
-                                        "title": {
+                                        "message": {
                                             "type": "string",
-                                            "example": "Élections Présidentielles 2025"
+                                            "example": "Success"
                                         },
-                                        "slug": {
-                                            "type": "string",
-                                            "example": "elections-presidentielles-2025"
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
                                         }
                                     },
                                     "type": "object"
@@ -109,9 +83,943 @@
                     }
                 }
             }
+        },
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "operationId": "7761c732affc93ecaeb0577524636b6e",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "user@exemple.com"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "User Name"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/user"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "operationId": "4e09fafeb8298e258f38d1dc53967582",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/user"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/candidates/{candidate}/edit": {
+            "delete": {
+                "tags": [
+                    "Candidate"
+                ],
+                "operationId": "f38ed037166b79a45443159d776bac18",
+                "parameters": [
+                    {
+                        "name": "candidate",
+                        "in": "path",
+                        "description": "Candidate id",
+                        "required": true,
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/candidate"
+                                            }
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/candidates": {
+            "post": {
+                "tags": [
+                    "Candidate"
+                ],
+                "operationId": "5922cee87729f2c7d3c13daa52b6dd09",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "vote_id",
+                                    "name"
+                                ],
+                                "properties": {
+                                    "vote_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Candidate Name"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Candidate Description"
+                                    },
+                                    "profession": {
+                                        "type": "string",
+                                        "example": "Candidate Profession"
+                                    },
+                                    "university": {
+                                        "type": "string",
+                                        "example": "Candidate University"
+                                    },
+                                    "photo": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "theme": {
+                                        "type": "string",
+                                        "example": "Candidate Theme"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/candidate"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/candidates/{candidate}": {
+            "get": {
+                "tags": [
+                    "Candidate"
+                ],
+                "operationId": "dbe8763a4656569f465d555b2aa75ac9",
+                "parameters": [
+                    {
+                        "name": "candidate",
+                        "in": "path",
+                        "description": "Candidate id",
+                        "required": true,
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/candidate"
+                                            }
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Candidate"
+                ],
+                "operationId": "8781f17536ae60400b70ff1dffbc6fd4",
+                "parameters": [
+                    {
+                        "name": "candidate",
+                        "in": "path",
+                        "description": "Candidate id",
+                        "required": true,
+                        "example": 1
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "vote_id",
+                                    "name"
+                                ],
+                                "properties": {
+                                    "vote_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Candidate Name"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Candidate Description"
+                                    },
+                                    "profession": {
+                                        "type": "string",
+                                        "example": "Candidate Profession"
+                                    },
+                                    "university": {
+                                        "type": "string",
+                                        "example": "Candidate University"
+                                    },
+                                    "photo": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "theme": {
+                                        "type": "string",
+                                        "example": "Candidate Theme"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/candidate"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Candidate"
+                ],
+                "operationId": "5c015d2def3f5dad657cfe0d60ccd042",
+                "parameters": [
+                    {
+                        "name": "candidate",
+                        "in": "path",
+                        "description": "Candidate id",
+                        "required": true,
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/candidate"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/votes": {
+            "get": {
+                "tags": [
+                    "Vote"
+                ],
+                "operationId": "2cf4a05d95e5ed00a93da6496a4514ed",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/vote"
+                                            }
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Vote"
+                ],
+                "operationId": "886fee5b4153df52c614ef81e2cc5cbc",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "start_date",
+                                    "end_date"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Vote Title"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Vote Description"
+                                    },
+                                    "start_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-10-01T00:00:00Z"
+                                    },
+                                    "end_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-10-03T23:59:59Z"
+                                    },
+                                    "logo": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "example": "logo.png"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/vote"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/votes/{vote}": {
+            "get": {
+                "tags": [
+                    "Vote"
+                ],
+                "operationId": "11f136a263595f58da5b1e3d7bb0e41a",
+                "parameters": [
+                    {
+                        "name": "vote",
+                        "in": "path",
+                        "description": "Vote id",
+                        "required": true,
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/vote"
+                                            }
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Vote"
+                ],
+                "operationId": "8440dbaccf07988729da69f52a2130b1",
+                "parameters": [
+                    {
+                        "name": "vote",
+                        "in": "path",
+                        "description": "Vote id",
+                        "required": true,
+                        "allowEmptyValue": false,
+                        "example": "1"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "start_date",
+                                    "end_date"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Vote Title"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Vote Description"
+                                    },
+                                    "start_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-10-01T00:00:00Z"
+                                    },
+                                    "end_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-10-31T23:59:59Z"
+                                    },
+                                    "logo": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "example": "logo.png"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/vote"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Vote"
+                ],
+                "operationId": "b0bcebac070a1abf4e68147241f753ec",
+                "parameters": [
+                    {
+                        "name": "vote",
+                        "in": "path",
+                        "description": "Vote id",
+                        "required": true,
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/vote"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/votes/{vote}/edit": {
+            "get": {
+                "tags": [
+                    "Vote"
+                ],
+                "operationId": "d1bf2fd5f883897fb254422321e67142",
+                "parameters": [
+                    {
+                        "name": "vote",
+                        "in": "path",
+                        "description": "Vote id",
+                        "required": true,
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/vote"
+                                            }
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/votes/{vote}/{candidate}/vote": {
+            "post": {
+                "tags": [
+                    "Vote"
+                ],
+                "operationId": "8f76fac91e86771efe7518c14f865815",
+                "parameters": [
+                    {
+                        "name": "vote",
+                        "in": "path",
+                        "description": "Vote id",
+                        "required": true,
+                        "example": 1
+                    },
+                    {
+                        "name": "candidate",
+                        "in": "path",
+                        "description": "Candidate id",
+                        "required": true,
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/candidate"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
         }
     },
     "components": {
+        "schemas": {
+            "user": {
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "candidate": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "profession": {
+                        "type": "string"
+                    },
+                    "university": {
+                        "type": "string"
+                    },
+                    "photo": {
+                        "type": "string"
+                    },
+                    "votes_count": {
+                        "type": "integer"
+                    },
+                    "theme": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "vote": {
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "uuid": {
+                        "type": "string"
+                    },
+                    "logo": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            }
+        },
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
@@ -119,13 +1027,27 @@
                 "in": "header",
                 "bearerFormat": "JWT",
                 "scheme": "bearer"
+            },
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
             }
         }
     },
     "tags": [
         {
-            "name": "Groupes de vote",
-            "description": "Groupes de vote"
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Candidate",
+            "description": "Candidate"
+        },
+        {
+            "name": "Vote",
+            "description": "Vote"
         }
     ]
 }

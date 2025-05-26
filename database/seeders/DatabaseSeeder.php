@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Http\Resources\VoteResource;
 use App\Models\Candidate;
 use App\Models\User;
 use App\Models\Votant;
@@ -12,19 +13,31 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
+
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
-        User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
 
         User::factory(10)->create();
+        Vote::factory(3)->state(['user_id' => $user->id])->create();
+        $vote = Vote::factory()->create([
+            'user_id' => $user->id,
+            'title' => 'Test Vote',
+            'description' => 'This is a test vote for seeding purposes.',
+            'start_date' => now(),
+            'end_date' => now()->addDays(7),
+        ]);
+
         Vote::factory(10)->create();
+
         Votant::factory(100)->create();
         Candidate::factory(10)->create();
+        Candidate::factory(3)->state(['vote_id' => $vote->id])->create();
     }
 }

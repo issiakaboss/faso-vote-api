@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Candidate;
+use App\Models\Enums\VotantStatusEnum;
 use App\Models\Vote;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -21,6 +22,10 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->unique(['vote_id', 'email']);
             $table->unique(['vote_id', 'phone']);
+            $table->enum('status', VotantStatusEnum::values())->default(VotantStatusEnum::PENDING->value);
+            $table->string('ip_address')->nullable();
+            $table->string('user_agent')->nullable();
+            $table->string('country')->nullable();
             $table->timestamps();
         });
     }

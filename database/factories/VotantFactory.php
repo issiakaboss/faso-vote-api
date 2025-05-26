@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Candidate;
+use App\Models\Enums\VotantStatusEnum;
 use App\Models\Vote;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,6 +24,9 @@ class VotantFactory extends Factory
             'candidate_id' => Candidate::random() ?: Candidate::factory(),
             'email' => $this->faker->unique()->safeEmail(),
             'phone' => $this->faker->phoneNumber(),
+            'status' => VotantStatusEnum::random(),
+            'ip_address' => $this->faker->ipv4(),
+            'user_agent' => $this->faker->userAgent(),
         ];
     }
 }

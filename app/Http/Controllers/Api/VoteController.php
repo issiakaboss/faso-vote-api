@@ -2,104 +2,115 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Facades\VoteStorage;
 use App\Http\Controllers\Controller;
-use App\Models\VoteGroup;
+use App\Http\Resources\CandidateResource;
+use App\Http\Resources\VoteResource;
+use App\Models\Candidate;
+use App\Models\Vote;
+use App\Services\VoteService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class VoteController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/vote-groups",
-     *     summary="Lister tous les groupes de vote",
-     *     tags={"Groupes de vote"},
-     *
-     *     @OA\Response(
-     *         response=200,
-     *         description="Liste des groupes de vote",
-     *
-     *         @OA\JsonContent(
-     *             type="array",
-     *
-     *             @OA\Items(
-     *
-     *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="title", type="string", example="Élections 2025"),
-     *                 @OA\Property(property="slug", type="string", example="elections-2025")
-     *             )
-     *         )
-     *     )
-     * )
-     */
-    public function index()
+    public const BASE_PATH = parent::BASE_PATH . '/votes';
+
+    public const VOTE = 'Vote';
+
+
+
+    public function getVotes()
     {
-        return response()->json(VoteGroup::all());
+        return VoteResource::collection(Vote::forUser()->get());
     }
 
-    /**
-     * @OA\Post(
-     *     path="/api/vote-groups",
-     *     summary="Créer un nouveau groupe de vote",
-     *     tags={"Groupes de vote"},
-     *
-     *     @OA\RequestBody(
-     *         required=true,
-     *
-     *         @OA\JsonContent(
-     *             required={"title"},
-     *
-     *             @OA\Property(property="title", type="string", example="Élections Présidentielles 2025")
-     *         )
-     *     ),
-     *
-     *     @OA\Response(
-     *         response=201,
-     *         description="Groupe de vote créé",
-     *
-     *         @OA\JsonContent(
-     *
-     *             @OA\Property(property="id", type="integer", example=1),
-     *             @OA\Property(property="title", type="string", example="Élections Présidentielles 2025"),
-     *             @OA\Property(property="slug", type="string", example="elections-presidentielles-2025")
-     *         )
-     *     )
-     * )
-     */
+    public function show(Vote $vote)
+    {
+        return new VoteResource($vote->load('candidates'));
+    }
+
+    public function showByUuid(string $uuid)
+    {
+        $vote = Vote::byUiid($uuid)->firstOrFail();
+
+        return new VoteResource($vote->load('candidates'));
+    }
+
+    public function vote(Vote $vote, Candidate $candidate)
+    {
+
+        $voteService = new VoteService($vote, $candidate);
+
+        $voteService->validate();
+
+        if ($vote->isEnded()) {
+            $vote->lock();
+
+            return self::errorJson('Le vote est terminé.', 403);
+        }
+
+        $candidate->incrementVotes();
+
+        return self::successJson(new CandidateResource($candidate->refresh()));
+    }
+
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|string',
+        $request->validate(Vote::validationRules());
+
+        $logoPath = $request->file('logo') ? VoteStorage::put(VOTE_LOGO_PATH, $request->file('logo')) : null;
+
+        $vote = Vote::create([
+            'user_id' => 1,
+            'uuid' => (string) \Illuminate\Support\Str::uuid(),
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'start_date' => Carbon::parse($request->input('start_date')),
+            'end_date' => Carbon::parse($request->input('end_date')),
+            'logo' => $logoPath,
         ]);
 
-        $group = VoteGroup::create([
-            'title' => $request->title,
-            'slug' => $request->title,
+        return self::successJson(new VoteResource($vote->refresh()), 'Vote created successfully');
+    }
+
+    public function edit(Vote $vote): JsonResource
+    {
+        $vote->logo = $vote->logoUrl();
+
+        return new JsonResource($vote);
+    }
+
+    public function update(Request $request, Vote $vote)
+    {
+
+        $request->validate(Vote::validationRules());
+
+        if ($request->file('logo')) {
+            $vote->deleteLogo();
+            $logoPath = VoteStorage::put(VOTE_LOGO_PATH, $request->file('logo'));
+        } else {
+            $logoPath = $vote->logo;
+        }
+
+        $vote->update([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'start_date' => Carbon::parse($request->input('start_date')),
+            'end_date' => Carbon::parse($request->input('end_date')),
+            'logo' => $logoPath,
         ]);
 
-        return response()->json($group, 201);
+        return self::successJson(new VoteResource($vote), 'Vote updated successfully');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(VoteGroup $voteGroup)
+    public function destroy(Vote $vote)
     {
-        //
-    }
+        $vote->deleteLogo();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, VoteGroup $voteGroup)
-    {
-        //
-    }
+        $vote->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(VoteGroup $voteGroup)
-    {
-        //
+        return self::successJson(new VoteResource($vote), 'Vote deleted successfully');
     }
 }
