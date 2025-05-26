@@ -28,12 +28,16 @@ class VoteController extends Controller
 
     public function show(Vote $vote)
     {
+        $vote->loadStatistics();
+
         return new VoteResource($vote->load('candidates'));
     }
 
     public function showByUuid(string $uuid)
     {
         $vote = Vote::byUiid($uuid)->firstOrFail();
+
+        $vote->loadStatistics();
 
         return new VoteResource($vote->load('candidates'));
     }

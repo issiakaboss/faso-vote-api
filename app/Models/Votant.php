@@ -13,5 +13,6 @@ class Votant extends BaseModel
         'ip_address',
         'user_agent',
         'country',
+        'access_token',
     ];
 }
