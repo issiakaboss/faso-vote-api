@@ -1,10 +1,24 @@
 <?php
 
+use App\Events\VoteUpdated;
 use App\Facades\VoteStorage;
+use App\Models\Candidate;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/test-vote-event', function () {
+    $candidate = Candidate::first();
+
+    if (!$candidate) {
+        return 'No candidate found.';
+    }
+
+    broadcast(new VoteUpdated($candidate));
+
+    return 'VoteUpdated event dispatched!';
 });
 
 Route::get('/swagger', function () {
