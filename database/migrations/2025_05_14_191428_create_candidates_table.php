@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('profession')->nullable();
             $table->string('university')->nullable();
-            $table->string('theme')->nullable();
+            $table->text('theme')->nullable();
             $table->string('photo')->nullable();
             $table->timestamps();
         });

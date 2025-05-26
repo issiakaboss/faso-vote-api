@@ -87,8 +87,6 @@ class VoteController extends Controller
 
         $request->validate(Vote::validationRules());
 
-        return $vote;
-
         if ($request->file('logo')) {
             $vote->deleteLogo();
             $logoPath = VoteStorage::put(VOTE_LOGO_PATH, $request->file('logo'));

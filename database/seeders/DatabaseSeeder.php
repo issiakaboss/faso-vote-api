@@ -38,6 +38,6 @@ class DatabaseSeeder extends Seeder
 
         Votant::factory(100)->create();
         Candidate::factory(10)->create();
-        Candidate::factory(3)->state(['Vote_id' => $vote->id])->create();
+        Candidate::factory(3)->state(['vote_id' => $vote->id])->create();
     }
 }
