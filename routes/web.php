@@ -10,15 +10,20 @@ Route::get('/', function () {
 });
 
 Route::get('/test-vote-event', function () {
-    $candidate = Candidate::first();
-
-    if (!$candidate) {
+    $candidate1 = Candidate::find(10);
+    $candidate2 = Candidate::find(1);
+    if (!$candidate1 || !$candidate2) {
         return 'No candidate found.';
     }
+    $candidate1->votes_count += 1;
+    $candidate2->votes_count += 1;
+    $candidate1->save();
+    $candidate2->save();
 
-    broadcast(new VoteUpdated($candidate));
+    broadcast(new VoteUpdated($candidate1));
+    broadcast(new VoteUpdated($candidate2));
 
-    return 'VoteUpdated event dispatched!';
+    return "VoteUpdated event dispatched!";
 });
 
 Route::get('/swagger', function () {

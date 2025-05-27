@@ -31,7 +31,7 @@ class VoteUpdated implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new Channel(sprintf('newVoice.%s', $this->candidate->id)),
+            new Channel(sprintf('newVoice.%s', $this->candidate->vote_id)),
         ];
     }
 
