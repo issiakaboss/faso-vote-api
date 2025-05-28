@@ -260,14 +260,14 @@
                             "schema": {
                                 "required": [
                                     "vote_id",
-                                    "name"
+                                    "full_name"
                                 ],
                                 "properties": {
                                     "vote_id": {
                                         "type": "integer",
                                         "example": 1
                                     },
-                                    "name": {
+                                    "full_name": {
                                         "type": "string",
                                         "example": "Candidate Name"
                                     },
@@ -413,7 +413,7 @@
                                         "type": "integer",
                                         "example": 1
                                     },
-                                    "name": {
+                                    "full_name": {
                                         "type": "string",
                                         "example": "Candidate Name"
                                     },
@@ -898,20 +898,13 @@
                 ]
             }
         },
-        "/votes/{vote}/{candidate}/vote": {
+        "/votes/{candidate}/vote": {
             "post": {
                 "tags": [
                     "Vote"
                 ],
-                "operationId": "8f76fac91e86771efe7518c14f865815",
+                "operationId": "fe1ad187bf62878029ea7f4385908321",
                 "parameters": [
-                    {
-                        "name": "vote",
-                        "in": "path",
-                        "description": "Vote id",
-                        "required": true,
-                        "example": 1
-                    },
                     {
                         "name": "candidate",
                         "in": "path",
@@ -975,7 +968,7 @@
                     "id": {
                         "type": "integer"
                     },
-                    "name": {
+                    "full_name": {
                         "type": "string"
                     },
                     "description": {

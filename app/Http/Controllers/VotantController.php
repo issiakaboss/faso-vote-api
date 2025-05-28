@@ -23,7 +23,6 @@ class VotantController extends Controller
             'country' => $request->header('X-Country'), // Assuming country is passed in header
         ]);
 
-
         return self::successJson(new VotantResource($vontant), 'Votant stored successfully');
     }
 }

@@ -19,8 +19,6 @@ class VoteController extends Controller
 
     public const VOTE = 'Vote';
 
-
-
     public function getVotes()
     {
         return VoteResource::collection(Vote::forUser()->get());
@@ -42,22 +40,22 @@ class VoteController extends Controller
         return new VoteResource($vote->load('candidates'));
     }
 
-    public function vote(Vote $vote, Candidate $candidate)
+    public function vote(Candidate $candidate)
     {
+
+        /* @var Vote $vote */
+        $vote = $candidate->vote;
 
         $voteService = new VoteService($vote, $candidate);
 
         $voteService->validate();
 
-        if ($vote->isEnded()) {
-            $vote->lock();
-
-            return self::errorJson('Le vote est terminé.', 403);
-        }
-
         $candidate->incrementVotes();
+        $vote->loadStatistics();
 
-        return self::successJson(new CandidateResource($candidate->refresh()));
+        broadcast(new \App\Events\VoteEvent($candidate, $vote));
+
+        return self::successJson(new CandidateResource($candidate));
     }
 
     public function store(Request $request)

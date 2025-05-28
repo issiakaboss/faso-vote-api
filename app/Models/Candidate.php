@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Facades\VoteStorage;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Candidate extends BaseModel
 {
@@ -18,9 +18,9 @@ class Candidate extends BaseModel
         'theme',
     ];
 
-    public function votes(): HasMany
+    public function vote(): BelongsTo
     {
-        return $this->hasMany(Vote::class);
+        return $this->belongsTo(Vote::class);
     }
 
     public static function validationRules(): array
@@ -38,7 +38,7 @@ class Candidate extends BaseModel
 
     public function photoUrl(): ?string
     {
-        return $this->photo ? asset(IMAGE_PREFIX . $this->photo) : null;
+        return $this->photo ? asset(IMAGE_PREFIX.$this->photo) : null;
     }
 
     public function deletePhoto(): void
