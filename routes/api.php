@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\VoteController;
 use App\Http\Controllers\CandidateController;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,23 @@ Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/logout', [AuthController::class, 'logout'])
         ->middleware('auth:sanctum')->name('logout');
+
+    Route::prefix('google')->group(function () {
+        Route::get('/redirect', function () {
+            return response()->json([
+                'url' => Socialite::driver('google')
+                    ->stateless()
+                    ->redirect()
+                    ->getTargetUrl()
+            ]);
+        });
+
+        Route::get('/callback', function () {
+            $user = Socialite::driver('google')->user();
+
+            return $user;
+        });
+    });
 });
 
 // Route::middleware('auth:sanctum')->group(function () {});
