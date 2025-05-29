@@ -18,7 +18,7 @@ class CandidateResource extends JsonResource
             'id' => $this->id,
             'vote_id' => $this->vote_id,
             'full_name' => $this->full_name,
-            "theme" => $this->theme,
+            'theme' => $this->theme,
             'university' => $this->university,
             'photo' => $this->photoUrl(),
             'votes_count' => $this->votes_count,

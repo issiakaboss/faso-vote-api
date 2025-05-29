@@ -17,12 +17,11 @@ class VotantController extends Controller
 
         $vontant = Votant::create([
             'vote_id' => $request->vote_id,
-            'phone' => $request->phone,
+            'identity' => $request->phone,
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
             'country' => $request->header('X-Country'), // Assuming country is passed in header
         ]);
-
 
         return self::successJson(new VotantResource($vontant), 'Votant stored successfully');
     }

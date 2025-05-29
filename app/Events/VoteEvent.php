@@ -3,24 +3,26 @@
 namespace App\Events;
 
 use App\Models\Candidate;
+use App\Models\Vote;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class VoteUpdated implements ShouldBroadcastNow
+class VoteEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public Candidate $candidate;
 
-    public function __construct(Candidate $candidate)
+    public Vote $vote;
+
+    public function __construct(Candidate $candidate, Vote $vote)
     {
         $this->candidate = $candidate;
+
+        $this->vote = $vote;
     }
 
     /**
@@ -31,7 +33,7 @@ class VoteUpdated implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new Channel(sprintf('newVoice.%s', $this->candidate->vote_id)),
+            new Channel(sprintf('newVoice.%s', $this->vote->uuid)),
         ];
     }
 
@@ -43,7 +45,11 @@ class VoteUpdated implements ShouldBroadcastNow
     public function broadcastWith(): array
     {
         return [
-            'candidat' => ['candidat_id' => $this->candidate->id, 'voix' => $this->candidate->votes_count],
+            'candidat' => [
+                'candidat_id' => $this->candidate->id,
+                'voix' => $this->candidate->votes_count,
+            ],
+            'statistics' => $this->vote->statistics,
         ];
     }
 }

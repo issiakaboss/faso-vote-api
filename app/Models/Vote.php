@@ -4,8 +4,8 @@ namespace App\Models;
 
 use App\Facades\VoteStorage;
 use App\Models\Enums\ModelStatus;
+use App\Models\Enums\VotantStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Vote extends BaseModel
@@ -38,7 +38,6 @@ class Vote extends BaseModel
         ];
     }
 
-
     public function candidates(): HasMany
     {
         return $this->hasMany(Candidate::class);
@@ -52,7 +51,7 @@ class Vote extends BaseModel
     public function logoUrl(): ?string
     {
 
-        return $this->logo ? asset(IMAGE_PREFIX . $this->logo) : null;
+        return $this->logo ? asset(IMAGE_PREFIX.$this->logo) : null;
     }
 
     public function duration(): string
@@ -90,7 +89,42 @@ class Vote extends BaseModel
 
     public function url(): string
     {
-        return route('vote.showByUuid', ['uuid' => $this->uuid]);
+        return str(env('CLIENT_URL'))->append('/vote/', $this->uuid)->toString();
+    }
+
+    public function total(): int
+    {
+        return $this->votants()->count();
+    }
+
+    public function countVotantByStatus(VotantStatusEnum $status): int
+    {
+        return $this->votants()->where('status', $status->value)->count();
+    }
+
+    public function votedCount(): int
+    {
+        return $this->countVotantByStatus(VotantStatusEnum::VOTED);
+    }
+
+    public function voteInvalidCount(): int
+    {
+        return $this->countVotantByStatus(VotantStatusEnum::INVALID);
+    }
+
+    public function votePendingCount(): int
+    {
+        return $this->countVotantByStatus(VotantStatusEnum::PENDING);
+    }
+
+    public function loadStatistics(): void
+    {
+        $this->statistics = [
+            'total' => $this->total(),
+            'voted' => $this->votedCount(),
+            'invalid' => $this->voteInvalidCount(),
+            'pending' => $this->votePendingCount(),
+        ];
     }
 
     public function scopeByUiid(Builder $query, string $uuid): Builder

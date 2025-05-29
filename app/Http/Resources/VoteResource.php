@@ -19,6 +19,7 @@ class VoteResource extends JsonResource
             'title' => $this->title,
             'uuid' => $this->uuid,
             'url' => $this->url(),
+            'statistics' => $this->whenNotNull($this->statistics),
             'duration' => $this->duration(),
             'logo' => $this->logoUrl(),
             'status' => $this->status->label(),

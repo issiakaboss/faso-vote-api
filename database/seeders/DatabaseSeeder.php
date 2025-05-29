@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Http\Resources\VoteResource;
 use App\Models\Candidate;
 use App\Models\User;
 use App\Models\Votant;

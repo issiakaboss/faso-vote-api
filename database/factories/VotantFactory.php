@@ -22,8 +22,7 @@ class VotantFactory extends Factory
         return [
             'vote_id' => Vote::random() ?: Vote::factory(),
             'candidate_id' => Candidate::random() ?: Candidate::factory(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'phone' => $this->faker->phoneNumber(),
+            'identity' => $this->faker->unique()->safeEmail(),
             'status' => VotantStatusEnum::random(),
             'ip_address' => $this->faker->ipv4(),
             'user_agent' => $this->faker->userAgent(),

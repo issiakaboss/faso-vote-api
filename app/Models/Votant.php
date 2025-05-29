@@ -7,9 +7,8 @@ class Votant extends BaseModel
     protected $fillable = [
         'vote_id',
         'candidate_id',
-        'email',
-        'phone',
-        'status',
+        'otp',
+        'identity',
         'ip_address',
         'user_agent',
         'country',

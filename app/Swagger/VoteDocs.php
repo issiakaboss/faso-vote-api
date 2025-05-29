@@ -116,10 +116,9 @@ class VoteDocs extends Docs
     public function destroy() {}
 
     #[OA\Post(
-        path: self::BASE_PATH.'/{vote}/{candidate}/vote',
+        path: self::BASE_PATH.'/{candidate}/vote',
         tags: [self::VOTE],
         parameters: [
-            new OA\Parameter(name: 'vote', in: 'path', description: 'Vote id', required: true, example: 1),
             new OA\Parameter(name: 'candidate', in: 'path', description: 'Candidate id', required: true, example: 1),
         ],
         security: [['sanctum' => []]],

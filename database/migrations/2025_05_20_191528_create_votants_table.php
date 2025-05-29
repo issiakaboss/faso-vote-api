@@ -18,14 +18,14 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Candidate::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignIdFor(Vote::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->string('email')->nullable();
-            $table->string('phone')->nullable();
-            $table->unique(['vote_id', 'email']);
-            $table->unique(['vote_id', 'phone']);
+            $table->string('identity');
+            $table->unique(['vote_id', 'identity']);
             $table->enum('status', VotantStatusEnum::values())->default(VotantStatusEnum::PENDING->value);
             $table->string('ip_address')->nullable();
             $table->string('user_agent')->nullable();
             $table->string('country')->nullable();
+            $table->integer('otp')->nullable();
+            $table->boolean('is_verified')->default(false);
             $table->timestamps();
         });
     }
