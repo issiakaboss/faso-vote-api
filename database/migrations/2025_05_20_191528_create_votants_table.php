@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Candidate;
-use App\Models\Enums\VotantStatusEnum;
 use App\Models\Vote;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -19,8 +18,8 @@ return new class extends Migration
             $table->foreignIdFor(Candidate::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignIdFor(Vote::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('identity');
-            $table->unique(['vote_id', 'identity']);
-            $table->enum('status', VotantStatusEnum::values())->default(VotantStatusEnum::PENDING->value);
+            $table->boolean('is_voted')->default(false);
+            $table->unique(['vote_id', 'identity', 'candidate_id']);
             $table->string('ip_address')->nullable();
             $table->string('user_agent')->nullable();
             $table->string('country')->nullable();

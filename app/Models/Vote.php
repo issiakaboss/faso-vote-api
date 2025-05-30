@@ -51,7 +51,7 @@ class Vote extends BaseModel
     public function logoUrl(): ?string
     {
 
-        return $this->logo ? asset(IMAGE_PREFIX.$this->logo) : null;
+        return $this->logo ? asset(IMAGE_PREFIX . $this->logo) : null;
     }
 
     public function duration(): string
@@ -92,39 +92,26 @@ class Vote extends BaseModel
         return str(env('CLIENT_URL'))->append('/vote/', $this->uuid)->toString();
     }
 
-    public function total(): int
+    public function getVotantCounts(): array
     {
-        return $this->votants()->count();
-    }
+        $result = $this->votants()
+            ->selectRaw('
+                COUNT(CASE WHEN is_voted = 1 THEN 1 END) as voted_count,
+                COUNT(CASE WHEN is_voted = 0 THEN 1 END) as not_voted_count,
+                COUNT(*) as total_count
+            ')
+            ->first();
 
-    public function countVotantByStatus(VotantStatusEnum $status): int
-    {
-        return $this->votants()->where('status', $status->value)->count();
-    }
-
-    public function votedCount(): int
-    {
-        return $this->countVotantByStatus(VotantStatusEnum::VOTED);
-    }
-
-    public function voteInvalidCount(): int
-    {
-        return $this->countVotantByStatus(VotantStatusEnum::INVALID);
-    }
-
-    public function votePendingCount(): int
-    {
-        return $this->countVotantByStatus(VotantStatusEnum::PENDING);
+        return  [
+            'voted' => $result->voted_count ?? 0,
+            'not_voted' => $result->not_voted_count ?? 0,
+            'total' => $result->total_count ?? 0,
+        ];
     }
 
     public function loadStatistics(): void
     {
-        $this->statistics = [
-            'total' => $this->total(),
-            'voted' => $this->votedCount(),
-            'invalid' => $this->voteInvalidCount(),
-            'pending' => $this->votePendingCount(),
-        ];
+        $this->statistics = $this->getVotantCounts();
     }
 
     public function scopeByUiid(Builder $query, string $uuid): Builder

@@ -16,12 +16,12 @@ use OpenApi\Attributes as OA;
 )]
 class AuthDocs extends Docs
 {
-    public const BASE_PATH = parent::BASE_PATH . '/auth';
+    public const BASE_PATH = parent::BASE_PATH.'/auth';
 
     public const AUTH = 'Auth';
 
     #[OA\Post(
-        path: self::BASE_PATH . '/login',
+        path: self::BASE_PATH.'/login',
         tags: [self::AUTH],
         requestBody: new RequestBodyHelper(
             [
@@ -39,7 +39,7 @@ class AuthDocs extends Docs
     public function login() {}
 
     #[OA\Post(
-        path: self::BASE_PATH . '/register',
+        path: self::BASE_PATH.'/register',
         tags: [self::AUTH],
         requestBody: new RequestBodyHelper(
             [
@@ -57,7 +57,7 @@ class AuthDocs extends Docs
     public function register() {}
 
     #[OA\Post(
-        path: self::BASE_PATH . '/logout',
+        path: self::BASE_PATH.'/logout',
         tags: [self::AUTH],
         security: [['sanctum' => []]],
         responses: [
@@ -67,7 +67,7 @@ class AuthDocs extends Docs
     public function logout() {}
 
     #[OA\Get(
-        path: self::BASE_PATH . '/google/redirect',
+        path: self::BASE_PATH.'/google/redirect',
         tags: [self::AUTH],
         responses: [new OA\Response(
             response: 302,

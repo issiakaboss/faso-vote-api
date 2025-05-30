@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-use App\Models\Candidate;
 use App\Models\User;
-use App\Models\Votant;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
@@ -80,7 +78,7 @@ class AuthController extends Controller
         $googleUser = Socialite::driver('google')->stateless()->user();
 
         return self::successJson(new JsonResource([
-            'indentity' => $googleUser->getEmail(),
+            'identity' => $googleUser->getEmail(),
         ]));
     }
 }

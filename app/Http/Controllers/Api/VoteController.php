@@ -43,22 +43,22 @@ class VoteController extends Controller
     public function vote(Request $request, Candidate $candidate)
     {
 
-        $request->validate(['identity' => 'required|string|exists:votants,identity']);
+        $request->validate(['identity' => 'required|string',]);
 
-        /* @var Vote $vote */
-        $vote = $candidate->vote;
-
-        $voteService = new VoteService($vote, $candidate);
+        $voteService = new VoteService($request, $candidate);
 
         $voteService->validate();
-        $voteService->saveVontant($request);
+        $voteService->saveVontant();
 
         $candidate->incrementVotes();
+        /* @var Vote $vote */
+        $vote = $candidate->vote;
         $vote->loadStatistics();
 
         broadcast(new \App\Events\VoteEvent($candidate, $vote));
 
-        return self::successJson(new CandidateResource($candidate));
+        return self::successJson(new CandidateResource($candidate))
+            ->additional(['sttistics' => $vote->statistics]);
     }
 
     public function store(Request $request)

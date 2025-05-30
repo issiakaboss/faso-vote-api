@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Enums\VotantStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 
 class Votant extends BaseModel
@@ -15,23 +14,17 @@ class Votant extends BaseModel
         'ip_address',
         'user_agent',
         'country',
-        'status',
+        'is_voted',
         'is_verified',
     ];
 
     protected $casts = [
-        'status' => VotantStatusEnum::class,
+        'is_voted' => 'boolean',
         'is_verified' => 'boolean',
     ];
 
-
-    public function isVoted(): bool
+    public function scopeFindByIdentity(Builder $query, string $vote_id, string $identity): Builder
     {
-        return $this->status->equals(VotantStatusEnum::VOTED);
-    }
-
-    public function scopeFindByIdentity(Builder $query, $identity): Builder
-    {
-        return $query->where('identity', $identity);
+        return $query->where('identity', $identity)->where('vote_id', $vote_id);
     }
 }

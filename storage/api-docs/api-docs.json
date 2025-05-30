@@ -919,12 +919,12 @@
                 ]
             }
         },
-        "/votes/{candidate}/vote": {
+        "/vote/{candidate}": {
             "post": {
                 "tags": [
-                    "Vote"
+                    "Guest Vote"
                 ],
-                "operationId": "fe1ad187bf62878029ea7f4385908321",
+                "operationId": "cfb55780d44eb477fe18a13fa7c1d587",
                 "parameters": [
                     {
                         "name": "candidate",
@@ -934,6 +934,24 @@
                         "example": 1
                     }
                 ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "identity"
+                                ],
+                                "properties": {
+                                    "identity": {
+                                        "type": "string",
+                                        "example": "votant@vote.v"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -1062,6 +1080,10 @@
         {
             "name": "Vote",
             "description": "Vote"
+        },
+        {
+            "name": "Guest Vote",
+            "description": "Guest Vote"
         }
     ]
 }

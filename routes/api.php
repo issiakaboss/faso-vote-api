@@ -4,7 +4,6 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\VoteController;
 use App\Http\Controllers\CandidateController;
 use Illuminate\Support\Facades\Route;
-use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,5 +48,5 @@ Route::prefix('votes')->group(function () {
 
 Route::prefix('vote')->group(function () {
     Route::get('/{uuid}', [VoteController::class, 'showByUuid'])->name('vote.showByUuid');
-    Route::post('/{candidate}/vote', [VoteController::class, 'vote'])->name('vote.vote')->whereNumber('candidate');
+    Route::post('/{candidate}', [VoteController::class, 'vote'])->name('vote.vote')->whereNumber('candidate');
 });

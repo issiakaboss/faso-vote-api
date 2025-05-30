@@ -3,22 +3,27 @@
 namespace App\Services;
 
 use App\Models\Candidate;
-use App\Models\Enums\VotantStatusEnum;
 use App\Models\Votant;
 use App\Models\Vote;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
-
+use Illuminate\Validation\ValidationException;
 
 class VoteService
 {
     private Vote $vote;
+
     private Candidate $candidate;
 
-    public function __construct(Vote $vote, Candidate $candidate)
+    private Request $request;
+
+    private ?Votant $votant;
+
+    public function __construct(Request $request, Candidate $candidate)
     {
-        $this->vote = $vote;
+        $this->vote = $candidate->vote;
         $this->candidate = $candidate;
+        $this->request = $request;
+        $this->setVotant();
     }
 
     public function validate(): void
@@ -32,21 +37,33 @@ class VoteService
         }
     }
 
-    public function saveVontant(Request $request)
+    public function saveVontant(): Votant
     {
-        $votant = Votant::findByIdentity($request->get('identity'))->first();
+        if ($this->votant) {
+            $this->votant->update([
+                'is_voted' => true,
+                'candidate_id' => $this->candidate->id,
+            ]);
 
-        $votant->update([
+            return $this->votant;
+        }
+
+        $votant = Votant::create([
             'vote_id' => $this->vote->id,
             'candidate_id' => $this->candidate->id,
-            'ip_address' => $request->ip(),
-            'user_agent' => $request->userAgent(),
-            'country' => $request->headers->get('X-Country', 'Unknown'),
-            'status' => VotantStatusEnum::VOTED,
+            'identity' => $this->request->get('identity'),
+            'ip_address' => $this->request->ip(),
+            'user_agent' => $this->request->userAgent(),
+            'country' => $this->request->headers->get('X-Country', null),
             'is_verified' => true,
         ]);
 
         return $votant;
+    }
+
+    private function setVotant(): void
+    {
+        $this->votant = Votant::findByIdentity($this->vote->id, $this->request->get('identity'))->first();
     }
 
     private function getErrorMessage(): ?string
@@ -65,6 +82,14 @@ class VoteService
 
         if ($this->candidate->vote_id !== $this->vote->id) {
             return 'Le candidat ne correspond pas au vote.';
+        }
+
+        if ($this->votant && $this->votant->is_verified === false) {
+            return "Vous n'avez pas encore ete vérifié.";
+        }
+
+        if ($this->votant && $this->votant->is_voted) {
+            return 'Vous avez déjà voté pour ce candidat.';
         }
 
         return null;

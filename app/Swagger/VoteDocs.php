@@ -19,12 +19,14 @@ use OpenApi\Attributes as OA;
 )]
 class VoteDocs extends Docs
 {
-    public const BASE_PATH = parent::BASE_PATH.'/votes';
-
+    public const BASE_PATH = parent::BASE_PATH . '/votes';
     public const VOTE = 'Vote';
+    public const GUEST_VOTE = 'Guest Vote';
+    public const GUEST_BASE_PATH = parent::BASE_PATH . '/vote';
+
 
     #[OA\Get(
-        path: self::BASE_PATH.'',
+        path: self::BASE_PATH . '',
         tags: [self::VOTE],
         security: [['sanctum' => []]],
         responses: [
@@ -34,7 +36,7 @@ class VoteDocs extends Docs
     public function getVotes() {}
 
     #[OA\Get(
-        path: self::BASE_PATH.'/{vote}',
+        path: self::BASE_PATH . '/{vote}',
         tags: [self::VOTE],
         security: [['sanctum' => []]],
         parameters: [
@@ -47,7 +49,7 @@ class VoteDocs extends Docs
     public function show() {}
 
     #[OA\Get(
-        path: self::BASE_PATH.'/{vote}/edit',
+        path: self::BASE_PATH . '/{vote}/edit',
         tags: [self::VOTE],
         security: [['sanctum' => []]],
         parameters: [
@@ -60,7 +62,7 @@ class VoteDocs extends Docs
     public function edit() {}
 
     #[OA\Post(
-        path: self::BASE_PATH.'',
+        path: self::BASE_PATH . '',
         tags: [self::VOTE],
         requestBody: new RequestBodyHelper(
             [
@@ -80,7 +82,7 @@ class VoteDocs extends Docs
     public function store() {}
 
     #[OA\Put(
-        path: self::BASE_PATH.'/{vote}',
+        path: self::BASE_PATH . '/{vote}',
         tags: [self::VOTE],
         parameters: [
             new OA\Parameter(name: 'vote', in: 'path', description: 'Vote id', required: true, example: '1', allowEmptyValue: false),
@@ -103,7 +105,7 @@ class VoteDocs extends Docs
     public function update() {}
 
     #[OA\Delete(
-        path: self::BASE_PATH.'/{vote}',
+        path: self::BASE_PATH . '/{vote}',
         tags: [self::VOTE],
         parameters: [
             new OA\Parameter(name: 'vote', in: 'path', description: 'Vote id', required: true, example: 1),
@@ -116,11 +118,18 @@ class VoteDocs extends Docs
     public function destroy() {}
 
     #[OA\Post(
-        path: self::BASE_PATH.'/{candidate}/vote',
-        tags: [self::VOTE],
+        path: self::GUEST_BASE_PATH . '/{candidate}',
+        tags: [self::GUEST_VOTE],
         parameters: [
             new OA\Parameter(name: 'candidate', in: 'path', description: 'Candidate id', required: true, example: 1),
         ],
+        requestBody: new RequestBodyHelper(
+            [
+                new OA\Property(property: 'identity', type: 'string', example: 'votant@vote.v'),
+
+            ],
+            required: ['identity'],
+        ),
         security: [['sanctum' => []]],
         responses: [
             new RequestResponseHelper(ref: 'candidate'),

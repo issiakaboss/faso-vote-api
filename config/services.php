@@ -40,5 +40,4 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI', 'http://localhost:8000/api/auth/callback'),
     ],
 
-
 ];
