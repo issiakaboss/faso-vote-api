@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Models\Candidate;
 use App\Models\User;
+use App\Models\Votant;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
@@ -71,5 +73,27 @@ class AuthController extends Controller
             ->getTargetUrl();
 
         return self::successJson(new JsonResource(['url' => $url]));
+    }
+
+    public function handleGoogleCallback()
+    {
+        $googleUser = Socialite::driver('google')->stateless()->user();
+
+        $votant = Votant::findByIdentity($googleUser->getEmail())->first();
+
+        if (! $votant) {
+            $votant = Votant::created([
+                'identity' => $googleUser->getEmail(),
+                'is_verified' => true
+            ]);
+        }
+
+        if ($votant->isVoted()) {
+            return self::errorJson('Vous avez déjà voté.', 403);
+        }
+
+        return self::successJson(new JsonResource([
+            'indentity' => $votant->identity,
+        ]));
     }
 }

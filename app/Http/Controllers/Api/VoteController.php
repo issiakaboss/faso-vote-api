@@ -40,8 +40,10 @@ class VoteController extends Controller
         return new VoteResource($vote->load('candidates'));
     }
 
-    public function vote(Candidate $candidate)
+    public function vote(Request $request, Candidate $candidate)
     {
+
+        $request->validate(['identity' => 'required|string|exists:votants,identity']);
 
         /* @var Vote $vote */
         $vote = $candidate->vote;
@@ -49,6 +51,7 @@ class VoteController extends Controller
         $voteService = new VoteService($vote, $candidate);
 
         $voteService->validate();
+        $voteService->saveVontant($request);
 
         $candidate->incrementVotes();
         $vote->loadStatistics();

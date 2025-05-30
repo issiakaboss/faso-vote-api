@@ -16,8 +16,8 @@ return new class extends Migration
     {
         Schema::create('votants', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Candidate::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignIdFor(Vote::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignIdFor(Candidate::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignIdFor(Vote::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('identity');
             $table->unique(['vote_id', 'identity']);
             $table->enum('status', VotantStatusEnum::values())->default(VotantStatusEnum::PENDING->value);

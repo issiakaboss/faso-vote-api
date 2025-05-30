@@ -3,13 +3,16 @@
 namespace App\Services;
 
 use App\Models\Candidate;
+use App\Models\Enums\VotantStatusEnum;
+use App\Models\Votant;
 use App\Models\Vote;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Request;
+
 
 class VoteService
 {
     private Vote $vote;
-
     private Candidate $candidate;
 
     public function __construct(Vote $vote, Candidate $candidate)
@@ -27,6 +30,23 @@ class VoteService
                 'vote' => $messages,
             ]);
         }
+    }
+
+    public function saveVontant(Request $request)
+    {
+        $votant = Votant::findByIdentity($request->get('identity'))->first();
+
+        $votant->update([
+            'vote_id' => $this->vote->id,
+            'candidate_id' => $this->candidate->id,
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'country' => $request->headers->get('X-Country', 'Unknown'),
+            'status' => VotantStatusEnum::VOTED,
+            'is_verified' => true,
+        ]);
+
+        return $votant;
     }
 
     private function getErrorMessage(): ?string

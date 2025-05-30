@@ -25,12 +25,7 @@ Route::prefix('auth')->group(function () {
 
     Route::prefix('google')->group(function () {
         Route::get('/redirect', [AuthController::class, 'redirectToGoogle'])->name('auth.google.redirect');
-
-        Route::get('/callback', function () {
-            $user = Socialite::driver('google')->user();
-
-            return $user;
-        });
+        Route::get('/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
     });
 });
 
@@ -50,11 +45,10 @@ Route::prefix('votes')->group(function () {
     Route::post('', [VoteController::class, 'store'])->name('admin.vote.store');
     Route::put('/{vote}', [VoteController::class, 'update'])->name('admin.vote.update')->whereNumber('vote');
     Route::delete('/{vote}', [VoteController::class, 'destroy'])->name('admin.vote.destroy')->whereNumber('vote');
-    Route::post('/{candidate}/vote', [VoteController::class, 'vote'])
-        ->name('admin.vote.vote')
-        ->whereNumber('vote')
-        ->whereNumber('candidate');
+   
 });
 
-Route::get('vote/{uuid}', [VoteController::class, 'showByUuid'])
-    ->name('vote.showByUuid');
+Route::prefix('vote')->group(function(){
+    Route::get('/{uuid}', [VoteController::class, 'showByUuid'])->name('vote.showByUuid');
+    Route::post('/{candidate}/vote', [VoteController::class, 'vote'])->name('vote.vote')->whereNumber('candidate');
+})
