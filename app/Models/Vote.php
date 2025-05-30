@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Facades\VoteStorage;
 use App\Models\Enums\ModelStatus;
-use App\Models\Enums\VotantStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -51,7 +50,7 @@ class Vote extends BaseModel
     public function logoUrl(): ?string
     {
 
-        return $this->logo ? asset(IMAGE_PREFIX . $this->logo) : null;
+        return $this->logo ? asset(IMAGE_PREFIX.$this->logo) : null;
     }
 
     public function duration(): string
@@ -102,7 +101,7 @@ class Vote extends BaseModel
             ')
             ->first();
 
-        return  [
+        return [
             'voted' => $result->voted_count ?? 0,
             'not_voted' => $result->not_voted_count ?? 0,
             'total' => $result->total_count ?? 0,

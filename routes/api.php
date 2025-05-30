@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\VoteController;
 use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\VotantController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,4 +50,6 @@ Route::prefix('votes')->group(function () {
 Route::prefix('vote')->group(function () {
     Route::get('/{uuid}', [VoteController::class, 'showByUuid'])->name('vote.showByUuid');
     Route::post('/{candidate}', [VoteController::class, 'vote'])->name('vote.vote')->whereNumber('candidate');
+    Route::post('/votant/phone', [VotantController::class, 'storeByPhone'])->name('vote.votant.storeByPhone');
+    Route::post('/votant/email', [VotantController::class, 'storeByEmail'])->name('vote.votant.storeByEmail');
 });

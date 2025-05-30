@@ -17,9 +17,7 @@ class VotantResource extends JsonResource
         return [
             'id' => $this->id,
             'vote_id' => $this->vote_id,
-            'email' => $this->whenNotNull($this->email),
-            'phone' => $this->whenNotNull($this->phone),
-            'status' => $this->status->label(),
+            'identity' => $this->whenNotNull($this->email),
         ];
     }
 }
