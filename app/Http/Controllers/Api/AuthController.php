@@ -79,21 +79,8 @@ class AuthController extends Controller
     {
         $googleUser = Socialite::driver('google')->stateless()->user();
 
-        $votant = Votant::findByIdentity($googleUser->getEmail())->first();
-
-        if (! $votant) {
-            $votant = Votant::create([
-                'identity' => $googleUser->getEmail(),
-                'is_verified' => true
-            ]);
-        }
-
-        if ($votant->isVoted()) {
-            return self::errorJson('Vous avez déjà voté.', 403);
-        }
-
         return self::successJson(new JsonResource([
-            'indentity' => $votant->identity,
+            'indentity' => $googleUser->getEmail(),
         ]));
     }
 }
