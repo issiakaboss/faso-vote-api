@@ -82,7 +82,7 @@ class AuthController extends Controller
         $votant = Votant::findByIdentity($googleUser->getEmail())->first();
 
         if (! $votant) {
-            $votant = Votant::created([
+            $votant = Votant::create([
                 'identity' => $googleUser->getEmail(),
                 'is_verified' => true
             ]);
