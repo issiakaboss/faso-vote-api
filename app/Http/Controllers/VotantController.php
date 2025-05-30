@@ -43,13 +43,15 @@ class VotantController extends Controller
             return self::errorJson('Vous avez déjà voté avec cet email.', 400);
         }
 
-        $vontant = Votant::create([
-            'vote_id' => $vote->id,
-            'identity' => $request->email,
-            'ip_address' => $request->ip(),
-            'user_agent' => $request->userAgent(),
-            'country' => $request->header('X-Country'),
-        ]);
+        if (!$vontant) {
+            $vontant = Votant::create([
+                'vote_id' => $vote->id,
+                'identity' => $request->email,
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+                'country' => $request->header('X-Country'),
+            ]);
+        }
 
         return self::successJson(new VotantResource($vontant), 'Votant stored successfully');
     }
