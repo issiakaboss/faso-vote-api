@@ -40,7 +40,7 @@ class VotantController extends Controller
         $vontant = Votant::findByIdentity($vote->id, $request->email)->first();
 
         if ($vontant && $vontant->is_voted) {
-            return self::errorJson('Vous avez déjà voté avec cet email.', 400);
+            return self::errorJson('Vous avez déjà voté avec cet email.', 403);
         }
 
         if (!$vontant) {

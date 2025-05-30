@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 abstract class Controller
@@ -18,7 +19,7 @@ abstract class Controller
         ]);
     }
 
-    public static function errorJson(string $message, int $status = 400)
+    public static function errorJson(string $message, int $status = 400): JsonResponse
     {
         return response()->json([
             'success' => false,
