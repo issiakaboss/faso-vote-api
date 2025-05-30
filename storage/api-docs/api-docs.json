@@ -194,6 +194,27 @@
                 ]
             }
         },
+        "/auth/google/redirect": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "operationId": "217aab71f1ffa970c9af55b359c46aa6",
+                "responses": {
+                    "302": {
+                        "description": "Redirects to Google OAuth",
+                        "content": {
+                            "text/html": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Redirecting to Google..."
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/candidates/{candidate}/edit": {
             "delete": {
                 "tags": [

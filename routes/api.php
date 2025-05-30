@@ -24,14 +24,7 @@ Route::prefix('auth')->group(function () {
         ->middleware('auth:sanctum')->name('logout');
 
     Route::prefix('google')->group(function () {
-        Route::get('/redirect', function () {
-            return response()->json([
-                'url' => Socialite::driver('google')
-                    ->stateless()
-                    ->redirect()
-                    ->getTargetUrl()
-            ]);
-        });
+        Route::get('/redirect', [AuthController::class, 'redirectToGoogle'])->name('auth.google.redirect');
 
         Route::get('/callback', function () {
             $user = Socialite::driver('google')->user();

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -60,5 +61,15 @@ class AuthController extends Controller
         $user->tokens()->delete();
 
         return self::successJson(new UserResource($user));
+    }
+
+    public function redirectToGoogle()
+    {
+        $url = Socialite::driver('google')
+            ->stateless()
+            ->redirect()
+            ->getTargetUrl();
+
+        return self::successJson(new JsonResource(['url' => $url]));
     }
 }
