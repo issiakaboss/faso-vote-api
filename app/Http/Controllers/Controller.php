@@ -18,12 +18,12 @@ abstract class Controller
         ]);
     }
 
-    public static function errorJson(string $message, int $status = 400): JsonResource
+    public static function errorJson(string $message, int $status = 400)
     {
-        return new JsonResource([
+        return response()->json([
             'success' => false,
             'status' => $status,
             'message' => $message,
-        ]);
+        ], $status);
     }
 }
