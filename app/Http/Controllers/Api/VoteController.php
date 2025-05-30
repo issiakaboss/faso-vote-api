@@ -15,7 +15,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class VoteController extends Controller
 {
-    public const BASE_PATH = parent::BASE_PATH.'/votes';
+    public const BASE_PATH = parent::BASE_PATH . '/votes';
 
     public const VOTE = 'Vote';
 
@@ -33,7 +33,7 @@ class VoteController extends Controller
 
     public function showByUuid(string $uuid)
     {
-        $vote = Vote::byUiid($uuid)->firstOrFail();
+        $vote = Vote::byUuid($uuid)->firstOrFail();
 
         $vote->loadStatistics();
 

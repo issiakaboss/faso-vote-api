@@ -50,7 +50,7 @@ class Vote extends BaseModel
     public function logoUrl(): ?string
     {
 
-        return $this->logo ? asset(IMAGE_PREFIX.$this->logo) : null;
+        return $this->logo ? asset(IMAGE_PREFIX . $this->logo) : null;
     }
 
     public function duration(): string
@@ -113,7 +113,7 @@ class Vote extends BaseModel
         $this->statistics = $this->getVotantCounts();
     }
 
-    public function scopeByUiid(Builder $query, string $uuid): Builder
+    public function scopeByUuid(Builder $query, string $uuid): Builder
     {
         return $query->where('uuid', $uuid);
     }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\VoteEvent;
 use App\Http\Resources\VotantResource;
 use App\Models\Votant;
 use App\Models\Vote;
@@ -35,20 +34,21 @@ class VotantController extends Controller
             'vote_uuid' => 'required|string',
         ]);
 
-        $vote = Vote::byUuid($request->vote_uuid)->firstOrFail();
-        $vontant  = Votant::findByIdentity($vote->id, $request->email)->first();
+        /*@var Vote $vote */
+        $vote =  Vote::byUuid($request->vote_uuid)->firstOrFail();
+
+        $vontant = Votant::findByIdentity($vote->id, $request->email)->first();
 
         if ($vontant && $vontant->is_voted) {
             return self::errorJson('Vous avez déjà voté avec cet email.', 400);
         }
-
 
         $vontant = Votant::create([
             'vote_id' => $vote->id,
             'identity' => $request->email,
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
-            'country' => $request->header('X-Country')
+            'country' => $request->header('X-Country'),
         ]);
 
         return self::successJson(new VotantResource($vontant), 'Votant stored successfully');
