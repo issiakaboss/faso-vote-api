@@ -15,9 +15,9 @@ class VotantController extends Controller
 
         $request->validate([
             'phone' => 'required|string|max:25',
-            'vote_uuid' => 'required|exists:votes,id',
-            'contry_code' => 'required',
-            'contry_iso_code' => 'nullable',
+            'vote_uuid' => 'required|exists:votes,uuid',
+            'country_code' => 'required',
+            'country_iso_code' => 'nullable',
         ]);
 
         $vontant = $this->save($request);
@@ -25,9 +25,42 @@ class VotantController extends Controller
         if ($vontant->is_voted) {
             return self::errorJson('Vous avez déjà voté avec ce numéro de téléphone.', 403);
         }
-        // $response = OtpService::make()->send($request->phone);
+
+        if (! $vontant->verification_key) {
+            $response = OtpService::make()->send($request->phone);
+            $vontant->update(['verification_key' => $response->json('otpToken')]);
+        }
 
         return self::successJson(new VotantResource($vontant), 'Votant stored successfully');
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'otp' => 'required|integer',
+            'vote_id' => 'required|exists:votes,id',
+            'identity' => 'required|string|max:25',
+        ]);
+
+        $vontant = Votant::findByIdentity($request->vote_id, $request->identity)->firstOrFail();
+
+        if ($vontant->is_verified) {
+            return self::errorJson('Ce numéro a ete déjà vérifié.', 403);
+        }
+
+        $response = OtpService::make([
+            'otp' => $request->otp,
+            'identity' => $vontant->identity,
+            'verificationKey' => $vontant->verification_key,
+        ])->verify();
+
+        if ($response->failed()) {
+            return self::errorJson('Le code OTP est invalide ou a expiré.', 403);
+        }
+
+        $vontant->verify();
+
+        return self::successJson(new VotantResource($vontant));
     }
 
     public function storeByEmail(Request $request)
@@ -50,15 +83,18 @@ class VotantController extends Controller
     {
         /* @var Vote $vote */
         $vote = Vote::byUuid($request->vote_uuid)->first();
-        $vontant = Votant::findByIdentity($vote->id, $request->email)->first();
+        $identity = $request->phone ?? $request->email;
+        $vontant = Votant::findByIdentity($vote->id, $identity)->first();
 
         if (! $vontant) {
             $vontant = Votant::create([
                 'vote_id' => $vote->id,
-                'identity' => $request->email ?? $request->phone,
+                'identity' => $identity,
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
-                'country' => $request->header('X-Country', $request->contry_iso_code),
+                'country' => $request->header('X-Country'),
+                'country_code' => $request->country_code ?? null,
+                'country_iso_code' => $request->country_iso_code ?? null,
             ]);
         }
 

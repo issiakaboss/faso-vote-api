@@ -16,6 +16,9 @@ class Votant extends BaseModel
         'country',
         'is_voted',
         'is_verified',
+        'country_code',
+        'country_iso_code',
+        'verification_key',
     ];
 
     protected $casts = [

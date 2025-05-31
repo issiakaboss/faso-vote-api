@@ -6,83 +6,31 @@ use Illuminate\Support\Facades\Http;
 
 class OtpService
 {
-    private array $data;
+    private array $payload;
 
-    public function __construct(array $data = [])
+    public function __construct(array $payload = [])
     {
-        $this->data = $data;
+        $this->payload = $payload;
     }
 
-    public static function make(array $data = []): self
+    public static function make(array $payload = []): self
     {
-        return new self($data);
+        return new self($payload);
     }
 
     public function send(string $identity): \Illuminate\Http\Client\Response
     {
-
-        // $url = "https://api.ikoddi.com/api/v1/groups/{$organizationId}/otp/{$otpAppId}/{$type}/{$identity}";
-
-        // $response = Http::withHeaders([
-        //     'Content-Type' => 'application/json',
-        //     'x-api-key' => config('services.ikoddi.api_key'),
-        // ])->post($url);
-
-        // if ($response->successful()) {
-        //     return response()->json([
-        //         'message' => 'OTP envoyé avec succès.',
-        //         'data' => $response->json()
-        //     ]);
-        // } else {
-        //     return response()->json([
-        //         'message' => 'Échec de l’envoi de l’OTP.',
-        //         'error' => $response->body()
-        //     ], $response->status());
-        // }
-
         $url = $this->getUrl(str('sms/')->append(urlencode($identity)));
 
         return Http::withHeaders($this->getHeaders())->post($url);
     }
 
-    // Methode de verification d'OTP
+    public function verify(): \Illuminate\Http\Client\Response
+    {
+        $url = $this->getUrl('verify');
 
-    // public function OtpVerify(Request $request)
-    // {
-    //     $request->validate([
-    //         'otp' => 'required|string',
-    //         'identity' => 'required|string',
-    //         'verificationKey' => 'required|string',
-    //     ]);
-
-    //     $organizationId = "10478339";
-    //     $otpAppId = "cmbc1fs6j0ee3fx2vj1fyravr";
-
-    //     $url = "https://api.ikoddi.com/api/v1/groups/{$organizationId}/otp/{$otpAppId}/verify";
-
-    //     $payload = [
-    //         'otp' => $request->otp,
-    //         'identity' => $request->identity,
-    //         'verificationKey' => $request->verificationKey,
-    //     ];
-
-    //     $response = Http::withHeaders([
-    //         'Content-Type' => 'application/json',
-    //         'x-api-key' => config('services.ikoddi.api_key'),
-    //     ])->post($url, $payload);
-
-    //     if ($response->successful()) {
-    //         return response()->json([
-    //             'message' => 'Vérification OTP réussie.',
-    //             'data' => $response->json(),
-    //         ]);
-    //     } else {
-    //         return response()->json([
-    //             'error' => 'Échec de la vérification OTP.',
-    //             'details' => $response->body(),
-    //         ], $response->status());
-    //     }
-    // }
+        return Http::withHeaders($this->getHeaders())->post($url, $this->payload);
+    }
 
     private function getUrl(string $route): string
     {

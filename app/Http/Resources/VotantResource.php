@@ -18,6 +18,7 @@ class VotantResource extends JsonResource
             'id' => $this->id,
             'vote_id' => $this->vote_id,
             'identity' => $this->identity,
+            'is_verified' => $this->is_verified,
         ];
     }
 }

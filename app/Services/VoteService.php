@@ -50,7 +50,7 @@ class VoteService
 
     private function setVotant(): void
     {
-        $this->votant = Votant::find($this->request->votant_id)->first();
+        $this->votant = Votant::findByIdentity($this->vote->id, $this->request->identity)->firstOrFail();
     }
 
     private function getErrorMessage(): ?string

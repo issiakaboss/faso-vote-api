@@ -52,4 +52,5 @@ Route::prefix('vote')->group(function () {
     Route::post('/{candidate}', [VoteController::class, 'vote'])->name('vote.vote')->whereNumber('candidate');
     Route::post('/votant/phone', [VotantController::class, 'storeByPhone'])->name('vote.votant.storeByPhone');
     Route::post('/votant/email', [VotantController::class, 'storeByEmail'])->name('vote.votant.storeByEmail');
+    Route::post('/votant/verify-phone', [VotantController::class, 'verifyOtp'])->name('vote.votant.verifyOtp');
 });

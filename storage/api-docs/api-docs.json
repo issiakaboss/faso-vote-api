@@ -567,6 +567,92 @@
                                         "description": "Phone number of the voter",
                                         "type": "string",
                                         "example": "+33612345678"
+                                    },
+                                    "vote_uuid": {
+                                        "description": "UUID of the vote",
+                                        "type": "string",
+                                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                                    },
+                                    "country_code": {
+                                        "description": "Country code of the voter",
+                                        "type": "string",
+                                        "example": "+226"
+                                    },
+                                    "country_iso_code": {
+                                        "description": "ISO code of the country",
+                                        "type": "string",
+                                        "example": "FR"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/votant"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/vote/votant/verify-phone": {
+            "post": {
+                "tags": [
+                    "Guest Vote"
+                ],
+                "operationId": "47c16e72026ddee459572e15a2b60e44",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone"
+                                ],
+                                "properties": {
+                                    "otp": {
+                                        "description": "One-time password sent to the voter",
+                                        "type": "integer",
+                                        "example": 123456
+                                    },
+                                    "vote_id": {
+                                        "description": "ID of the vote",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "identity": {
+                                        "description": "Identity of the voter",
+                                        "type": "string",
+                                        "example": "john_doe"
                                     }
                                 },
                                 "type": "object"

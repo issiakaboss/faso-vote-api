@@ -45,7 +45,6 @@ class VoteController extends Controller
 
         $request->validate([
             'identity' => 'required|string',
-            'votant_id' => 'required|exists:votants,id',
         ]);
 
         $voteService = new VoteService($request, $candidate);

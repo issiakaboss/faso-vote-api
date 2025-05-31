@@ -23,6 +23,9 @@ return new class extends Migration
             $table->string('ip_address')->nullable();
             $table->string('user_agent')->nullable();
             $table->string('country')->nullable();
+            $table->string('country_code')->nullable();
+            $table->string('country_iso_code')->nullable();
+            $table->string('verification_key')->nullable();
             $table->integer('otp')->nullable();
             $table->boolean('is_verified')->default(false);
             $table->timestamps();
