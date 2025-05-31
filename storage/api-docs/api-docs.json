@@ -549,6 +549,67 @@
                 ]
             }
         },
+        "/vote/votant/phone": {
+            "post": {
+                "tags": [
+                    "Guest Vote"
+                ],
+                "operationId": "6329672823f7e2a0ed60a4256503433a",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone"
+                                ],
+                                "properties": {
+                                    "phone": {
+                                        "description": "Phone number of the voter",
+                                        "type": "string",
+                                        "example": "+33612345678"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/votant"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/votes": {
             "get": {
                 "tags": [
@@ -1031,8 +1092,27 @@
                 },
                 "type": "object"
             },
+            "votant": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "vote_id": {
+                        "description": "ID of the vote",
+                        "type": "integer"
+                    },
+                    "identity": {
+                        "description": "Identity of the voter",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "vote": {
                 "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
                     "title": {
                         "type": "string"
                     },
@@ -1078,12 +1158,12 @@
             "description": "Candidate"
         },
         {
-            "name": "Vote",
-            "description": "Vote"
-        },
-        {
             "name": "Guest Vote",
             "description": "Guest Vote"
+        },
+        {
+            "name": "Vote",
+            "description": "Vote"
         }
     ]
 }

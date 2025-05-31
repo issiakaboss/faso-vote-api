@@ -23,6 +23,11 @@ class Votant extends BaseModel
         'is_verified' => 'boolean',
     ];
 
+    public function verify(): void
+    {
+        $this->update(['is_verified' => true]);
+    }
+
     public function scopeFindByIdentity(Builder $query, string $vote_id, string $identity): Builder
     {
         return $query->where('identity', $identity)->where('vote_id', $vote_id);

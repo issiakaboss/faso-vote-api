@@ -50,7 +50,7 @@ class Vote extends BaseModel
     public function logoUrl(): ?string
     {
 
-        return $this->logo ? asset(IMAGE_PREFIX . $this->logo) : null;
+        return $this->logo ? asset(IMAGE_PREFIX.$this->logo) : null;
     }
 
     public function duration(): string

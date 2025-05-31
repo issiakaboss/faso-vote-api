@@ -39,5 +39,11 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URI', 'http://localhost:8000/api/auth/callback'),
     ],
+    'ikoddi' => [
+        'api_key' => env('IKODDI_API_KEY'),
+        'api_url' => env('IKODDI_API_URL'),
+        'organization_id' => env('IKODDI_ORGANIZATION_ID'),
+        'otp_app_id' => env('IKODDI_OTP_APP_ID'),
+    ],
 
 ];

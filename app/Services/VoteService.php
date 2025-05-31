@@ -16,7 +16,7 @@ class VoteService
 
     private Request $request;
 
-    private ?Votant $votant;
+    private Votant $votant;
 
     public function __construct(Request $request, Candidate $candidate)
     {
@@ -39,31 +39,18 @@ class VoteService
 
     public function saveVontant(): Votant
     {
-        if ($this->votant) {
-            $this->votant->update([
-                'is_voted' => true,
-                'candidate_id' => $this->candidate->id,
-            ]);
 
-            return $this->votant;
-        }
-
-        $votant = Votant::create([
-            'vote_id' => $this->vote->id,
+        $this->votant->update([
+            'is_voted' => true,
             'candidate_id' => $this->candidate->id,
-            'identity' => $this->request->get('identity'),
-            'ip_address' => $this->request->ip(),
-            'user_agent' => $this->request->userAgent(),
-            'country' => $this->request->headers->get('X-Country', null),
-            'is_verified' => true,
         ]);
 
-        return $votant;
+        return $this->votant;
     }
 
     private function setVotant(): void
     {
-        $this->votant = Votant::findByIdentity($this->vote->id, $this->request->get('identity'))->first();
+        $this->votant = Votant::find($this->request->votant_id)->first();
     }
 
     private function getErrorMessage(): ?string
@@ -84,12 +71,16 @@ class VoteService
             return 'Le candidat ne correspond pas au vote.';
         }
 
-        if ($this->votant && $this->votant->is_verified === false) {
+        if ($this->votant->is_verified === false) {
             return "Vous n'avez pas encore ete vérifié.";
         }
 
-        if ($this->votant && $this->votant->is_voted) {
+        if ($this->votant->is_voted) {
             return 'Vous avez déjà voté pour ce candidat.';
+        }
+
+        if ($this->votant->identity !== $this->request->get('identity')) {
+            return 'L\'identité fournie ne correspond pas à celle du votant.';
         }
 
         return null;

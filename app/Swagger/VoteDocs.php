@@ -10,6 +10,7 @@ use OpenApi\Attributes as OA;
     schema: 'vote',
     type: 'object',
     properties: [
+        new OA\Property(property: 'id', type: 'integer'),
         new OA\Property(property: 'title', type: 'string'),
         new OA\Property(property: 'uuid', type: 'string'),
         new OA\Property(property: 'logo', type: 'string'),

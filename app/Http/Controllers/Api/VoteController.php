@@ -15,7 +15,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class VoteController extends Controller
 {
-    public const BASE_PATH = parent::BASE_PATH . '/votes';
+    public const BASE_PATH = parent::BASE_PATH.'/votes';
 
     public const VOTE = 'Vote';
 
@@ -43,7 +43,10 @@ class VoteController extends Controller
     public function vote(Request $request, Candidate $candidate)
     {
 
-        $request->validate(['identity' => 'required|string']);
+        $request->validate([
+            'identity' => 'required|string',
+            'votant_id' => 'required|exists:votants,id',
+        ]);
 
         $voteService = new VoteService($request, $candidate);
 
