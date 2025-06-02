@@ -139,4 +139,17 @@ class VoteDocs extends Docs
         ]
     )]
     public function vote() {}
+
+    #[OA\Get(
+        path: self::BASE_PATH.'/{vote}/toggle',
+        tags: [self::VOTE],
+        parameters: [
+            new OA\Parameter(name: 'vote', in: 'path', description: 'Vote id', required: true, example: 1),
+        ],
+        security: [['sanctum' => []]],
+        responses: [
+            new RequestResponseHelper(ref: 'vote'),
+        ]
+    )]
+    public function toggle() {}
 }

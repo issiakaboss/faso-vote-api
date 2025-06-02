@@ -82,8 +82,12 @@ class Vote extends BaseModel
 
     public function lock(): void
     {
-        $this->status = ModelStatus::INACTIVE;
-        $this->save();
+        $this->update(['status' => ModelStatus::INACTIVE]);
+    }
+
+    public function unlock(): void
+    {
+        $this->update(['status' => ModelStatus::ACTIVE]);
     }
 
     public function url(): string

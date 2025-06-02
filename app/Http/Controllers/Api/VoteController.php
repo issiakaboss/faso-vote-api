@@ -120,4 +120,17 @@ class VoteController extends Controller
 
         return self::successJson(new VoteResource($vote), 'Vote deleted successfully');
     }
+
+    public function toggle(Vote $vote)
+    {
+        if ($vote->isActive()) {
+            $vote->lock();
+            $message = 'Le vote a bien été déverrouillé.';
+        } else {
+            $vote->unlock();
+            $message = 'Le vote a bien été verrouillé.';
+        }
+
+        return self::successJson(new VoteResource($vote->refresh()), $message);
+    }
 }

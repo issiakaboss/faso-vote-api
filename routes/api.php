@@ -45,6 +45,7 @@ Route::prefix('votes')->group(function () {
     Route::post('', [VoteController::class, 'store'])->name('admin.vote.store');
     Route::put('/{vote}', [VoteController::class, 'update'])->name('admin.vote.update')->whereNumber('vote');
     Route::delete('/{vote}', [VoteController::class, 'destroy'])->name('admin.vote.destroy')->whereNumber('vote');
+    Route::get('/{vote}/toggle', [VoteController::class, 'toggle'])->name('admin.vote.toggle')->whereNumber('vote');
 });
 
 Route::prefix('vote')->group(function () {
